@@ -1,5 +1,6 @@
 ﻿using CarSelling.Data;
 using CarSelling.Models;
+using CarSelling.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,86 +11,85 @@ namespace CarSelling.Controllers
     [ApiController]
     public class CarAdController : ControllerBase
     {
-        private readonly CarSellingDbContext _context;
-        public CarAdController(CarSellingDbContext context)
+        private readonly ICarAdService _service;
+
+        public CarAdController(ICarAdService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet]
-        public IEnumerable<CarAd> Get() => _context.CarAds;
+        public IEnumerable<CarAd> Get() => _service.GetAll();
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var ad = _context.CarAds.Find(id);
+            var ad = await _service.GetByIdAsync(id);
             return ad is not null ? Ok(ad) : NotFound();
         }
 
         [HttpPost]
-        public IActionResult Create(CarAd carAd)
+        public async Task<IActionResult> Create(CarAd carAd)
         {
-            _context.CarAds.Add(carAd);
-            _context.SaveChanges();
-
+            await _service.CreateCarAdAsync(carAd);
             return CreatedAtAction(nameof(Get), new { id = carAd.Id }, carAd);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, CarAd carAd)
-        {
-            if (id != carAd.Id)
-            {
-                return BadRequest();
-            }
+        //[HttpPut("{id}")]
+        //public IActionResult Update(int id, CarAd carAd)
+        //{
+        //    if (id != carAd.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            if (!OwnerExists(carAd.Owner.Id))
-            {
-                return NotFound();
-            }
+        //    if (!OwnerExists(carAd.Owner.Id))
+        //    {
+        //        return NotFound();
+        //    }
 
-            _context.Entry(carAd).State = EntityState.Modified;
-            _context.Entry(carAd.Owner).State = EntityState.Modified;
+        //    _context.Entry(carAd).State = EntityState.Modified;
+        //    _context.Entry(carAd.Owner).State = EntityState.Modified;
             
-            try
-            {
-                _context.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AdExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        _context.SaveChanges();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!AdExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            var ad = _context.CarAds.Find(id);
+        //[HttpDelete("{id}")]
+        //public IActionResult Delete(int id)
+        //{
+        //    var ad = _context.CarAds.Find(id);
 
-            if (ad is null)
-            {
-                return NotFound();
-            }
+        //    if (ad is null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _context.CarAds.Remove(ad);
-            _context.SaveChanges();
+        //    _context.CarAds.Remove(ad);
+        //    _context.SaveChanges();
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        private bool AdExists(int id) =>
-            _context.CarAds.Any(ad => ad.Id == id);
+        //private bool AdExists(int id) =>
+        //    _context.CarAds.Any(ad => ad.Id == id);
 
-        private bool OwnerExists(int id) =>
-            _context.Owners.Any(owner => owner.Id == id);
+        //private bool OwnerExists(int id) =>
+        //    _context.Owners.Any(owner => owner.Id == id);
     }
 }

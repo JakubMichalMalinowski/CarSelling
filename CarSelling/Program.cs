@@ -1,4 +1,5 @@
 using CarSelling.Data;
+using CarSelling.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,8 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("CarSellingDataba
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<ICarAdService, CarAdService>();
 
 var app = builder.Build();
 
