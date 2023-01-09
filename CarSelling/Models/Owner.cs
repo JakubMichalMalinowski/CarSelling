@@ -10,6 +10,7 @@ namespace CarSelling.Models
         public string FirstName { get; set; } = string.Empty;
         public string? LastName { get; set; }
 
+        [Phone]
         public string? PhoneNo { get; set; }
 
         [EmailAddress]

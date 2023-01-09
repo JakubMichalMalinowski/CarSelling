@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace CarSelling.Models
 {
@@ -12,6 +13,8 @@ namespace CarSelling.Models
         public string? PhotoPath { get; set; }
 
         [Required]
+        [Precision(18,2)]
+        [Range(0, double.MaxValue)]
         public decimal Price { get; set; }
 
         [Required]
