@@ -1,4 +1,5 @@
 ﻿using CarSelling.Data;
+using CarSelling.Exceptions;
 using CarSelling.Models;
 using CarSelling.Services;
 using Microsoft.AspNetCore.Http;
@@ -35,61 +36,39 @@ namespace CarSelling.Controllers
             return CreatedAtAction(nameof(Get), new { id = carAd.Id }, carAd);
         }
 
-        //[HttpPut("{id}")]
-        //public IActionResult Update(int id, CarAd carAd)
-        //{
-        //    if (id != carAd.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, CarAd carAd)
+        {
+            if (id != carAd.Id)
+            {
+                return BadRequest();
+            }
 
-        //    if (!OwnerExists(carAd.Owner.Id))
-        //    {
-        //        return NotFound();
-        //    }
+            try
+            {
+                await _service.UpdateCarAdAsync(carAd);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
 
-        //    _context.Entry(carAd).State = EntityState.Modified;
-        //    _context.Entry(carAd.Owner).State = EntityState.Modified;
-            
-        //    try
-        //    {
-        //        _context.SaveChanges();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!AdExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+            return NoContent();
+        }
 
-        //    return NoContent();
-        //}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _service.DeleteCarAdAsync(id);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
 
-        //[HttpDelete("{id}")]
-        //public IActionResult Delete(int id)
-        //{
-        //    var ad = _context.CarAds.Find(id);
-
-        //    if (ad is null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.CarAds.Remove(ad);
-        //    _context.SaveChanges();
-
-        //    return NoContent();
-        //}
-
-        //private bool AdExists(int id) =>
-        //    _context.CarAds.Any(ad => ad.Id == id);
-
-        //private bool OwnerExists(int id) =>
-        //    _context.Owners.Any(owner => owner.Id == id);
+            return NoContent();
+        }
     }
 }
