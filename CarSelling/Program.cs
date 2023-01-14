@@ -39,6 +39,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ICarAdService, CarAdService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
