@@ -1,76 +1,60 @@
-﻿using CarSelling.Data;
-using CarSelling.Exceptions;
+﻿using CarSelling.Exceptions;
 using CarSelling.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
+using CarSelling.Repositories;
 
 namespace CarSelling.Services
 {
     public class CarAdService : ICarAdService
     {
-        private readonly CarSellingDbContext _context;
+        private readonly ICarAdRepository _carAdRepository;
+        private readonly IOwnerRepository _ownerRepository;
 
-        public CarAdService(CarSellingDbContext context)
+        public CarAdService(ICarAdRepository carAdRepository,
+            IOwnerRepository ownerRepository)
         {
-            _context = context;
+            _carAdRepository = carAdRepository;
+            _ownerRepository = ownerRepository;
         }
 
-        public async Task CreateCarAdAsync(CarAd carAd)
+        public async Task CreateAsync(CarAd carAd)
         {
-            await _context.CarAds.AddAsync(carAd);
-            await _context.SaveChangesAsync();
+            await _carAdRepository.CreateCarAdAsync(carAd);
         }
 
-        public async Task DeleteCarAdAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            var ad = await _context.CarAds.FindAsync(id);
+            var ad = await _carAdRepository.GetCarAdByIdAsync(id);
             if (ad is null)
             {
                 throw new NotFoundException();
             }
 
-            _context.CarAds.Remove(ad);
-            await _context.SaveChangesAsync();
+            await _carAdRepository.DeleteCarAdAsync(ad);
         }
 
-        public IEnumerable<CarAd> GetAll() =>
-            _context.CarAds;
+        public IEnumerable<CarAd> GetAll()
+        {
+            return _carAdRepository.GetAllCarAds();
+        }
 
         public async Task<CarAd?> GetByIdAsync(int id)
         {
-            var ad = await _context.CarAds.FindAsync(id);
-            return ad;
+            return await _carAdRepository.GetCarAdByIdAsync(id);
         }
 
-        public async Task UpdateCarAdAsync(CarAd carAd)
+        public async Task UpdateAsync(int id, CarAd carAd)
         {
-            if (!OwnerExists(carAd.Owner.Id))
+            if (id != carAd.Id)
+            {
+                throw new BadRequestException();
+            }
+
+            if (! await _ownerRepository.OwnerExistsAsync(carAd.Owner.Id))
             {
                 throw new NotFoundException();
             }
 
-            _context.Entry(carAd).State = EntityState.Modified;
-            _context.Entry(carAd.Owner).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AdExists(carAd.Id))
-                {
-                    throw new NotFoundException();
-                }
-
-                throw;
-            }
+            await _carAdRepository.UpdateCarAdAsync(carAd);
         }
-
-        private bool AdExists(int id) =>
-            _context.CarAds.Any(ad => ad.Id == id);
-
-        private bool OwnerExists(int id) =>
-            _context.Owners.Any(owner => owner.Id == id);
     }
 }

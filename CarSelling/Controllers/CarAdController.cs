@@ -1,10 +1,7 @@
-﻿using CarSelling.Data;
-using CarSelling.Exceptions;
+﻿using CarSelling.Exceptions;
 using CarSelling.Models;
 using CarSelling.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace CarSelling.Controllers
 {
@@ -32,21 +29,20 @@ namespace CarSelling.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CarAd carAd)
         {
-            await _service.CreateCarAdAsync(carAd);
+            await _service.CreateAsync(carAd);
             return CreatedAtAction(nameof(Get), new { id = carAd.Id }, carAd);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, CarAd carAd)
         {
-            if (id != carAd.Id)
-            {
-                return BadRequest();
-            }
-
             try
             {
-                await _service.UpdateCarAdAsync(carAd);
+                await _service.UpdateAsync(id, carAd);
+            }
+            catch (BadRequestException)
+            {
+                return BadRequest();
             }
             catch (NotFoundException)
             {
@@ -61,7 +57,7 @@ namespace CarSelling.Controllers
         {
             try
             {
-                await _service.DeleteCarAdAsync(id);
+                await _service.DeleteAsync(id);
             }
             catch (NotFoundException)
             {

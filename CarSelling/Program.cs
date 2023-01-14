@@ -1,4 +1,5 @@
 using CarSelling.Data;
+using CarSelling.Repositories;
 using CarSelling.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -38,8 +39,11 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("CarSellingDataba
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<ICarAdRepository, CarAdRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
+
 builder.Services.AddScoped<ICarAdService, CarAdService>();
-builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

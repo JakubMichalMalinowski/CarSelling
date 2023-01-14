@@ -6,8 +6,8 @@ namespace CarSelling.Services
     {
         public IEnumerable<CarAd> GetAll();
         public Task<CarAd?> GetByIdAsync(int id);
-        public Task CreateCarAdAsync(CarAd carAd);
-        public Task UpdateCarAdAsync(CarAd carAd);
-        public Task DeleteCarAdAsync(int id);
+        public Task CreateAsync(CarAd carAd);
+        public Task UpdateAsync(int id, CarAd carAd);
+        public Task DeleteAsync(int id);
     }
 }
