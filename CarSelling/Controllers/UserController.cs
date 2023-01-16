@@ -1,6 +1,7 @@
 ﻿using CarSelling.Models;
 using CarSelling.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace CarSelling.Controllers
 {
@@ -16,15 +17,15 @@ namespace CarSelling.Controllers
         }
 
         [HttpPost(nameof(Register))]
-        public async Task<IActionResult> Register(UserDto userDto)
+        public async Task<IActionResult> Register(UserCreationDto userCreationDto)
         {
-            bool success = await _service.RegisterUser(userDto);
+            bool success = await _service.RegisterUserAsync(userCreationDto);
             if (!success)
             {
-                return Conflict("This username exists");
+                return Conflict();
             }
 
-            return CreatedAtAction("Login", new { id = userDto.Id }, userDto); //todo hardcoded string to nameof()
+            return CreatedAtAction(nameof(Register), userCreationDto); //todo
         }
     }
 }

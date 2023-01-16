@@ -4,6 +4,6 @@ namespace CarSelling.Services
 {
     public interface IUserService
     {
-        public Task<bool> RegisterUser(UserDto userDto);
+        public Task<bool> RegisterUserAsync(UserCreationDto userDto);
     }
 }
