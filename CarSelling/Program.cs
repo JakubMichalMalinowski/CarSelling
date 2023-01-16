@@ -44,6 +44,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
 
 builder.Services.AddScoped<ICarAdService, CarAdService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

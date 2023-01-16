@@ -9,5 +9,6 @@ namespace CarSelling.Data
 
         public DbSet<CarAd> CarAds { get; set; }
         public DbSet<Owner> Owners { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

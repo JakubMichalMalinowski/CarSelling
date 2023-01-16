@@ -36,5 +36,15 @@ namespace CarSelling.Infrastructure
         {
             return ad?.ToCarAdDto() ?? null;
         }
+
+        public static User ToUser(this UserDto dto)
+        {
+            return new User
+            {
+                Id = dto.Id,
+                UserName = dto.UserName,
+                HashedPassword = dto.HashedPassword
+            };
+        }
     }
 }

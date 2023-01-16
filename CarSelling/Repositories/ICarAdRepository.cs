@@ -4,7 +4,7 @@ namespace CarSelling.Repositories
 {
     public interface ICarAdRepository
     {
-        public IQueryable<CarAd> GetAllCarAds();
+        public Task<IEnumerable<CarAd>> GetAllCarAds();
         public Task<CarAd?> GetCarAdByIdAsync(int id);
         public Task CreateCarAdAsync(CarAd carAd);
         public Task UpdateCarAdAsync(CarAd carAd);

@@ -17,7 +17,7 @@ namespace CarSelling.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<CarAdDto> Get() => _service.GetAll();
+        public async Task<IEnumerable<CarAdDto>> Get() => await _service.GetAllAsync();
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)

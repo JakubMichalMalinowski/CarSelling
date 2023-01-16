@@ -33,14 +33,16 @@ namespace CarSelling.Services
             await _carAdRepository.DeleteCarAdAsync(ad);
         }
 
-        public IEnumerable<CarAdDto> GetAll()
+        public async Task<IEnumerable<CarAdDto>> GetAllAsync()
         {
-            return _carAdRepository.GetAllCarAds().Select(ad => ad.ToCarAdDto());
+            return (await _carAdRepository.GetAllCarAds())
+                .Select(ad => ad.ToCarAdDto());
         }
 
         public async Task<CarAdDto?> GetByIdAsync(int id)
         {
-            return (await _carAdRepository.GetCarAdByIdAsync(id)).ToCarAdDtoNullable();
+            return (await _carAdRepository.GetCarAdByIdAsync(id))
+                .ToCarAdDtoNullable();
         }
 
         public async Task UpdateAsync(int id, CarAdDto carAdDto)

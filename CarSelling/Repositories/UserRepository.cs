@@ -1,5 +1,6 @@
 ﻿using CarSelling.Data;
 using CarSelling.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarSelling.Repositories
 {
@@ -12,9 +13,16 @@ namespace CarSelling.Repositories
             _context = context;
         }
 
-        public Task CreateUser(User user)
+        public async Task CreateUser(User user)
         {
-            throw new NotImplementedException();
+            await _context.AddAsync(user);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> UserWithUserNameExists(string userName)
+        {
+            return await _context.Users
+                .AnyAsync(user => user.UserName == userName);
         }
     }
 }
