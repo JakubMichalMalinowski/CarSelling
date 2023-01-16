@@ -1,4 +1,5 @@
 ﻿using CarSelling.Exceptions;
+using CarSelling.Infrastructure;
 using CarSelling.Models;
 using CarSelling.Repositories;
 
@@ -16,9 +17,9 @@ namespace CarSelling.Services
             _ownerRepository = ownerRepository;
         }
 
-        public async Task CreateAsync(CarAd carAd)
+        public async Task CreateAsync(CarAdDto carAdDto)
         {
-            await _carAdRepository.CreateCarAdAsync(carAd);
+            await _carAdRepository.CreateCarAdAsync(carAdDto.ToCarAd());
         }
 
         public async Task DeleteAsync(int id)
@@ -32,29 +33,29 @@ namespace CarSelling.Services
             await _carAdRepository.DeleteCarAdAsync(ad);
         }
 
-        public IEnumerable<CarAd> GetAll()
+        public IEnumerable<CarAdDto> GetAll()
         {
-            return _carAdRepository.GetAllCarAds();
+            return _carAdRepository.GetAllCarAds().Select(ad => ad.ToCarAdDto());
         }
 
-        public async Task<CarAd?> GetByIdAsync(int id)
+        public async Task<CarAdDto?> GetByIdAsync(int id)
         {
-            return await _carAdRepository.GetCarAdByIdAsync(id);
+            return (await _carAdRepository.GetCarAdByIdAsync(id)).ToCarAdDtoNullable();
         }
 
-        public async Task UpdateAsync(int id, CarAd carAd)
+        public async Task UpdateAsync(int id, CarAdDto carAdDto)
         {
-            if (id != carAd.Id)
+            if (id != carAdDto.Id)
             {
                 throw new BadRequestException();
             }
 
-            if (! await _ownerRepository.OwnerExistsAsync(carAd.Owner.Id))
+            if (! await _ownerRepository.OwnerExistsAsync(carAdDto.Owner.Id))
             {
                 throw new NotFoundException();
             }
 
-            await _carAdRepository.UpdateCarAdAsync(carAd);
+            await _carAdRepository.UpdateCarAdAsync(carAdDto.ToCarAd());
         }
     }
 }

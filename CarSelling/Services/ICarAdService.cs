@@ -4,10 +4,10 @@ namespace CarSelling.Services
 {
     public interface ICarAdService
     {
-        public IEnumerable<CarAd> GetAll();
-        public Task<CarAd?> GetByIdAsync(int id);
-        public Task CreateAsync(CarAd carAd);
-        public Task UpdateAsync(int id, CarAd carAd);
+        public IEnumerable<CarAdDto> GetAll();
+        public Task<CarAdDto?> GetByIdAsync(int id);
+        public Task CreateAsync(CarAdDto carAd);
+        public Task UpdateAsync(int id, CarAdDto carAd);
         public Task DeleteAsync(int id);
     }
 }

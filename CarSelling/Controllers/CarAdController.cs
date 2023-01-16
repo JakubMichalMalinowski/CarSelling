@@ -17,7 +17,7 @@ namespace CarSelling.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<CarAd> Get() => _service.GetAll();
+        public IEnumerable<CarAdDto> Get() => _service.GetAll();
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
@@ -27,18 +27,18 @@ namespace CarSelling.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CarAd carAd)
+        public async Task<IActionResult> Create(CarAdDto carAdDto)
         {
-            await _service.CreateAsync(carAd);
-            return CreatedAtAction(nameof(Get), new { id = carAd.Id }, carAd);
+            await _service.CreateAsync(carAdDto);
+            return CreatedAtAction(nameof(Get), new { id = carAdDto.Id }, carAdDto);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, CarAd carAd)
+        public async Task<IActionResult> Update(int id, CarAdDto carAdDto)
         {
             try
             {
-                await _service.UpdateAsync(id, carAd);
+                await _service.UpdateAsync(id, carAdDto);
             }
             catch (BadRequestException)
             {
