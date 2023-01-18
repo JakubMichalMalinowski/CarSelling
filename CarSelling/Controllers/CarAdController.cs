@@ -1,10 +1,12 @@
 ﻿using CarSelling.Exceptions;
 using CarSelling.Models;
 using CarSelling.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSelling.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CarAdController : ControllerBase
@@ -17,19 +19,19 @@ namespace CarSelling.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<CarAdDto>> Get() => await _service.GetAllAsync();
+        public async Task<IEnumerable<CarAdDto>> Get() => await _service.GetAllCarAdsAsync();
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var ad = await _service.GetByIdAsync(id);
+            var ad = await _service.GetCarAdByIdAsync(id);
             return ad is not null ? Ok(ad) : NotFound();
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(CarAdDto carAdDto)
         {
-            await _service.CreateAsync(carAdDto);
+            await _service.CreateCarAdAsync(carAdDto);
             return CreatedAtAction(nameof(Get), new { id = carAdDto.Id }, carAdDto);
         }
 
@@ -38,7 +40,7 @@ namespace CarSelling.Controllers
         {
             try
             {
-                await _service.UpdateAsync(id, carAdDto);
+                await _service.UpdateCarAdAsync(id, carAdDto);
             }
             catch (BadRequestException)
             {
@@ -57,7 +59,7 @@ namespace CarSelling.Controllers
         {
             try
             {
-                await _service.DeleteAsync(id);
+                await _service.DeleteCarAdAsync(id);
             }
             catch (NotFoundException)
             {

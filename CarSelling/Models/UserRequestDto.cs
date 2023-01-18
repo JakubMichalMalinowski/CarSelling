@@ -2,7 +2,7 @@
 
 namespace CarSelling.Models
 {
-    public class UserCreationDto
+    public class UserRequestDto
     {
         [Required]
         public string UserName { get; set; } = string.Empty;

@@ -13,16 +13,20 @@ namespace CarSelling.Repositories
             _context = context;
         }
 
-        public async Task CreateUser(User user)
+        public async Task CreateUserAsync(User user)
         {
-            await _context.AddAsync(user);
+            await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> UserWithUserNameExists(string userName)
-        {
-            return await _context.Users
-                .AnyAsync(user => user.UserName == userName);
-        }
+        public async Task<User?> GetUserByIdAsync(int id) =>
+            await _context.Users.FindAsync(id);
+
+        public async Task<User?> GetUserWithUserNameAsync(string userName) =>
+            await _context.Users
+            .FirstOrDefaultAsync(user => user.UserName == userName);
+
+        public async Task<bool> UserWithUserNameExistsAsync(string userName) =>
+            await _context.Users.AnyAsync(user => user.UserName == userName);
     }
 }

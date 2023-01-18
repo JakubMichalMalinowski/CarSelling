@@ -36,5 +36,23 @@ namespace CarSelling.Infrastructure
         {
             return ad?.ToCarAdDto() ?? null;
         }
+
+        public static UserResponseDto ToUserResponseDto(this UserRequestDto dto, int id)
+        {
+            return new UserResponseDto
+            {
+                Id = id,
+                UserName = dto.UserName
+            };
+        }
+
+        public static UserResponseDto? ToUserResponseDto(this User? user)
+        {
+            return user is null ? null : new UserResponseDto
+            {
+                Id = user.Id,
+                UserName = user.UserName
+            };
+        }
     }
 }

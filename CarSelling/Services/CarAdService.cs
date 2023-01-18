@@ -17,12 +17,14 @@ namespace CarSelling.Services
             _ownerRepository = ownerRepository;
         }
 
-        public async Task CreateAsync(CarAdDto carAdDto)
+        public async Task CreateCarAdAsync(CarAdDto carAdDto)
         {
-            await _carAdRepository.CreateCarAdAsync(carAdDto.ToCarAd());
+            var carAd = carAdDto.ToCarAd();
+            await _carAdRepository.CreateCarAdAsync(carAd);
+            carAdDto.Id = carAd.Id;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteCarAdAsync(int id)
         {
             var ad = await _carAdRepository.GetCarAdByIdAsync(id);
             if (ad is null)
@@ -33,19 +35,19 @@ namespace CarSelling.Services
             await _carAdRepository.DeleteCarAdAsync(ad);
         }
 
-        public async Task<IEnumerable<CarAdDto>> GetAllAsync()
+        public async Task<IEnumerable<CarAdDto>> GetAllCarAdsAsync()
         {
-            return (await _carAdRepository.GetAllCarAds())
+            return (await _carAdRepository.GetAllCarAdsAsync())
                 .Select(ad => ad.ToCarAdDto());
         }
 
-        public async Task<CarAdDto?> GetByIdAsync(int id)
+        public async Task<CarAdDto?> GetCarAdByIdAsync(int id)
         {
             return (await _carAdRepository.GetCarAdByIdAsync(id))
                 .ToCarAdDtoNullable();
         }
 
-        public async Task UpdateAsync(int id, CarAdDto carAdDto)
+        public async Task UpdateCarAdAsync(int id, CarAdDto carAdDto)
         {
             if (id != carAdDto.Id)
             {

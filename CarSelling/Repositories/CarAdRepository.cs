@@ -26,7 +26,7 @@ namespace CarSelling.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<CarAd>> GetAllCarAds() =>
+        public async Task<IEnumerable<CarAd>> GetAllCarAdsAsync() =>
             await _context.CarAds.ToListAsync();
 
         public async Task<CarAd?> GetCarAdByIdAsync(int id)
