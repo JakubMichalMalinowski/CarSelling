@@ -50,7 +50,7 @@ namespace CarSelling.Services
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.UserName)
                 }),
-                Expires = DateTime.UtcNow.AddSeconds(30),
+                Expires = DateTime.UtcNow.AddSeconds(10),
                 Issuer = issuer,
                 Audience = audience,
                 SigningCredentials = new SigningCredentials(

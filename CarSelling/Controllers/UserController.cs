@@ -1,4 +1,5 @@
 ﻿using CarSelling.Exceptions;
+using CarSelling.Infrastructure;
 using CarSelling.Models;
 using CarSelling.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace CarSelling.Controllers
 {
     [Authorize]
+    [JwtValidation]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -20,6 +22,7 @@ namespace CarSelling.Controllers
         }
 
         [AllowAnonymous]
+        [DisableJwtValidation]
         [HttpPost(nameof(Register))]
         public async Task<IActionResult> Register(UserRequestDto userRequestDto)
         {
@@ -35,6 +38,7 @@ namespace CarSelling.Controllers
         }
 
         [AllowAnonymous]
+        [DisableJwtValidation]
         [HttpPost(nameof(Login))]
         public async Task<IActionResult> Login(UserRequestDto userRequestDto)
         {

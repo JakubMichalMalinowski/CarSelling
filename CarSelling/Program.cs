@@ -1,10 +1,9 @@
 using CarSelling.Data;
+using CarSelling.Infrastructure;
 using CarSelling.Repositories;
 using CarSelling.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,17 +15,7 @@ builder.Services.AddAuthentication(options =>
 })
     .AddJwtBearer(o =>
     {
-        o.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidIssuer = builder.Configuration["JwtSettings:iss"],
-            ValidAudience = builder.Configuration["JwtSettings:aud"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:key"]!)),
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = false,
-            ValidateIssuerSigningKey = true
-        };
+        o.TokenValidationParameters = JwtValidation.TokenValidationParameters;
     });
 
 builder.Services.AddAuthorization();
@@ -56,6 +45,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<JwtSettingsMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

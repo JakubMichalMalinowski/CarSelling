@@ -1,4 +1,5 @@
 ﻿using CarSelling.Exceptions;
+using CarSelling.Infrastructure;
 using CarSelling.Models;
 using CarSelling.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CarSelling.Controllers
 {
     [Authorize]
+    [JwtValidation]
     [Route("api/[controller]")]
     [ApiController]
     public class CarAdController : ControllerBase
