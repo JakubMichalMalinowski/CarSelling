@@ -35,7 +35,7 @@ namespace CarSelling.Services
         public async Task<UserResponseDto?> GetUserByIdAsync(int id) =>
             (await _repository.GetUserByIdAsync(id)).ToUserResponseDto();
 
-        public async Task<string> LoginUserAsync(UserRequestDto userDto)
+        public async Task<string> LoginUserAsync(UserLoginDto userDto)
         {
             var user = await _repository.GetUserWithUserNameAsync(userDto.UserName);
             if (user is null)
@@ -61,7 +61,7 @@ namespace CarSelling.Services
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, user.UserName)
                 }),
-                Expires = DateTime.UtcNow.AddSeconds(10),
+                Expires = DateTime.UtcNow.AddSeconds(double.Parse(_configuration["JwtSettings:exp"]!)),
                 Issuer = issuer,
                 Audience = audience,
                 SigningCredentials = new SigningCredentials(

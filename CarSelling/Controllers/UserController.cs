@@ -40,11 +40,11 @@ namespace CarSelling.Controllers
         [AllowAnonymous]
         [DisableJwtValidation]
         [HttpPost(nameof(Login))]
-        public async Task<IActionResult> Login(UserRequestDto userRequestDto)
+        public async Task<IActionResult> Login(UserLoginDto userDto)
         {
             try
             {
-                var result = await _service.LoginUserAsync(userRequestDto);
+                var result = await _service.LoginUserAsync(userDto);
                 return Ok(new { token = result });
             }
             catch (BadCredentialsException)
