@@ -2,6 +2,6 @@
 {
     public interface IOwnerRepository
     {
-        public Task<bool> OwnerExistsAsync(int id);
+        public Task<bool> OwnerWithIdExistsAsync(int id);
     }
 }

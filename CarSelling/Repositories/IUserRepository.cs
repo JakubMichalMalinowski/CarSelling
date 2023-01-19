@@ -8,5 +8,8 @@ namespace CarSelling.Repositories
         public Task<bool> UserWithUserNameExistsAsync(string userName);
         public Task<User?> GetUserWithUserNameAsync(string userName);
         public Task<User?> GetUserByIdAsync(int id);
+        public Task UpdateUserAsync(User user);
+        public Task DeleteUserAsync(User user);
+        public Task<bool> UserWithIdExistsAsync(int userId);
     }
 }

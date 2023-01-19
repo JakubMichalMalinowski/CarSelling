@@ -21,6 +21,17 @@ namespace CarSelling.Services
             _configuration = configuration;
         }
 
+        public async Task DeleteUserAsync(int id)
+        {
+            var user = await _repository.GetUserByIdAsync(id);
+            if (user is null)
+            {
+                throw new NotFoundException();
+            }
+
+            await _repository.DeleteUserAsync(user);
+        }
+
         public async Task<UserResponseDto?> GetUserByIdAsync(int id) =>
             (await _repository.GetUserByIdAsync(id)).ToUserResponseDto();
 
@@ -74,10 +85,7 @@ namespace CarSelling.Services
 
             var passwordHasher = new PasswordHasher<User>();
 
-            var user = new User
-            {
-                UserName = userRequestDto.UserName
-            };
+            var user = userRequestDto.ToUserWithoutPasswordAndId();
 
             user.HashedPassword = passwordHasher
                 .HashPassword(user, userRequestDto.Password);
@@ -85,6 +93,25 @@ namespace CarSelling.Services
             await _repository.CreateUserAsync(user);
 
             return userRequestDto.ToUserResponseDto(user.Id);
+        }
+
+        public async Task UpdateUserAsync(int id, UserRequestDto userDto)
+        {
+            var userNameExists = await _repository
+                .UserWithUserNameExistsAsync(userDto.UserName);
+            if (userNameExists)
+            {
+                throw new UserAlreadyExistsException();
+            }
+
+            var passwordHasher = new PasswordHasher<User>();
+            var user = userDto.ToUserWithoutPassword(id);
+            var hashedPassword = passwordHasher
+                .HashPassword(user,
+                userDto.Password);
+            user.HashedPassword = hashedPassword;
+
+            await _repository.UpdateUserAsync(user);
         }
     }
 }

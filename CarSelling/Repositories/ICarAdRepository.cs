@@ -9,6 +9,6 @@ namespace CarSelling.Repositories
         public Task CreateCarAdAsync(CarAd carAd);
         public Task UpdateCarAdAsync(CarAd carAd);
         public Task DeleteCarAdAsync(CarAd carAd);
-        public Task<bool> AdExistsAsync(int id);
+        public Task<bool> CarAdWithIdExistsAsync(int id);
     }
 }

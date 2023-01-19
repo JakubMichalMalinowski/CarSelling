@@ -20,9 +20,13 @@ namespace CarSelling.Controllers
             _service = service;
         }
 
+        [AllowAnonymous]
+        [DisableJwtValidation]
         [HttpGet]
         public async Task<IEnumerable<CarAdDto>> Get() => await _service.GetAllCarAdsAsync();
 
+        [AllowAnonymous]
+        [DisableJwtValidation]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {

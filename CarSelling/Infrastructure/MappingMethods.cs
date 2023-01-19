@@ -54,5 +54,22 @@ namespace CarSelling.Infrastructure
                 UserName = user.UserName
             };
         }
+
+        public static User ToUserWithoutPassword(this UserRequestDto dto, int id)
+        {
+            return new User
+            {
+                Id = id,
+                UserName = dto.UserName
+            };
+        }
+
+        public static User ToUserWithoutPasswordAndId(this UserRequestDto dto)
+        {
+            return new User
+            {
+                UserName = dto.UserName
+            };
+        }
     }
 }

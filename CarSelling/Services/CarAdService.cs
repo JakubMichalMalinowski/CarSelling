@@ -54,7 +54,7 @@ namespace CarSelling.Services
                 throw new BadRequestException();
             }
 
-            if (! await _ownerRepository.OwnerExistsAsync(carAdDto.Owner.Id))
+            if (! await _ownerRepository.OwnerWithIdExistsAsync(carAdDto.Owner.Id))
             {
                 throw new NotFoundException();
             }

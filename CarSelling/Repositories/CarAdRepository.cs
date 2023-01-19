@@ -46,7 +46,7 @@ namespace CarSelling.Repositories
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (! await AdExistsAsync(carAd.Id))
+                if (! await CarAdWithIdExistsAsync(carAd.Id))
                 {
                     throw new NotFoundException();
                 }
@@ -55,7 +55,7 @@ namespace CarSelling.Repositories
             }
         }
 
-        public async Task<bool> AdExistsAsync(int id) =>
+        public async Task<bool> CarAdWithIdExistsAsync(int id) =>
             await _context.CarAds.AnyAsync(ad => ad.Id == id);
     }
 }

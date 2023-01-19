@@ -59,5 +59,39 @@ namespace CarSelling.Controllers
             var user = await _service.GetUserByIdAsync(id);
             return user is null ? NotFound() : Ok(user);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, UserRequestDto dto)
+        {
+            try
+            {
+                await _service.UpdateUserAsync(id, dto);
+            }
+            catch (UserAlreadyExistsException)
+            {
+                return Conflict();
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _service.DeleteUserAsync(id);
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
     }
 }

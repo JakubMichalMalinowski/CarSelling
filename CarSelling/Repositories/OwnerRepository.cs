@@ -12,7 +12,7 @@ namespace CarSelling.Repositories
             _context = context;
         }
 
-        public async Task<bool> OwnerExistsAsync(int id) =>
+        public async Task<bool> OwnerWithIdExistsAsync(int id) =>
             await _context.Owners.AnyAsync(owner => owner.Id == id);
     }
 }
