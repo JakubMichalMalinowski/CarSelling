@@ -8,13 +8,10 @@ namespace CarSelling.Services
     public class CarAdService : ICarAdService
     {
         private readonly ICarAdRepository _carAdRepository;
-        private readonly IOwnerRepository _ownerRepository;
 
-        public CarAdService(ICarAdRepository carAdRepository,
-            IOwnerRepository ownerRepository)
+        public CarAdService(ICarAdRepository carAdRepository)
         {
             _carAdRepository = carAdRepository;
-            _ownerRepository = ownerRepository;
         }
 
         public async Task CreateCarAdAsync(CarAdDto carAdDto)
@@ -52,11 +49,6 @@ namespace CarSelling.Services
             if (id != carAdDto.Id)
             {
                 throw new BadRequestException();
-            }
-
-            if (! await _ownerRepository.OwnerWithIdExistsAsync(carAdDto.Owner.Id))
-            {
-                throw new NotFoundException();
             }
 
             await _carAdRepository.UpdateCarAdAsync(carAdDto.ToCarAd());

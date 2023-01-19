@@ -11,5 +11,11 @@ namespace CarSelling.Models
 
         [Required]
         public string HashedPassword { get; set; } = string.Empty;
+
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+
+        [Phone]
+        public string? PhoneNo { get; set; }
     }
 }

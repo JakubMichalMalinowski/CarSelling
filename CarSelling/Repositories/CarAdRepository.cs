@@ -38,7 +38,6 @@ namespace CarSelling.Repositories
         public async Task UpdateCarAdAsync(CarAd carAd)
         {
             _context.Entry(carAd).State = EntityState.Modified;
-            _context.Entry(carAd.Owner).State = EntityState.Modified;
 
             try
             {

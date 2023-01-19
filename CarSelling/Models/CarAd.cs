@@ -19,8 +19,5 @@ namespace CarSelling.Models
 
         [Required]
         public bool Negotiable { get; set; }
-
-        [Required]
-        public Owner Owner { get; set; } = default!;
     }
 }

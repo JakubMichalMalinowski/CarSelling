@@ -14,7 +14,6 @@ namespace CarSelling.Infrastructure
                 Price = dto.Price,
                 Negotiable = dto.Negotiable,
                 PhotoPath = dto.PhotoPath,
-                Owner = dto.Owner
             };
         }
 
@@ -28,7 +27,6 @@ namespace CarSelling.Infrastructure
                 Price = ad.Price,
                 Negotiable = ad.Negotiable,
                 PhotoPath = ad.PhotoPath,
-                Owner = ad.Owner
             };
         }
 
@@ -42,7 +40,10 @@ namespace CarSelling.Infrastructure
             return new UserResponseDto
             {
                 Id = id,
-                UserName = dto.UserName
+                UserName = dto.UserName,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                PhoneNo = dto.PhoneNo
             };
         }
 
@@ -51,7 +52,10 @@ namespace CarSelling.Infrastructure
             return user is null ? null : new UserResponseDto
             {
                 Id = user.Id,
-                UserName = user.UserName
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PhoneNo = user.PhoneNo
             };
         }
 
@@ -60,7 +64,10 @@ namespace CarSelling.Infrastructure
             return new User
             {
                 Id = id,
-                UserName = dto.UserName
+                UserName = dto.UserName,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                PhoneNo = dto.PhoneNo
             };
         }
 
@@ -68,7 +75,10 @@ namespace CarSelling.Infrastructure
         {
             return new User
             {
-                UserName = dto.UserName
+                UserName = dto.UserName,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                PhoneNo = dto.PhoneNo
             };
         }
     }
