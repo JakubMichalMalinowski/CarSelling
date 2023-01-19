@@ -44,34 +44,14 @@ namespace CarSelling.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, CarAdDto carAdDto)
         {
-            try
-            {
-                await _service.UpdateCarAdAsync(id, carAdDto);
-            }
-            catch (BadRequestException)
-            {
-                return BadRequest();
-            }
-            catch (NotFoundException)
-            {
-                return NotFound();
-            }
-
+            await _service.UpdateCarAdAsync(id, carAdDto);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await _service.DeleteCarAdAsync(id);
-            }
-            catch (NotFoundException)
-            {
-                return NotFound();
-            }
-
+            await _service.DeleteCarAdAsync(id);
             return NoContent();
         }
     }

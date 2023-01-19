@@ -59,11 +59,13 @@ namespace CarSelling.Services
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName)
+                    new Claim("userId", user.Id.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
                 Expires = DateTime.UtcNow.AddSeconds(double.Parse(_configuration["JwtSettings:exp"]!)),
                 Issuer = issuer,
-                Audience = audience,
+                Audience = audience,                
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha512Signature)

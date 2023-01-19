@@ -26,15 +26,8 @@ namespace CarSelling.Controllers
         [HttpPost(nameof(Register))]
         public async Task<IActionResult> Register(UserRequestDto userRequestDto)
         {
-            try
-            {
-                var userResponseDto = await _service.RegisterUserAsync(userRequestDto);
-                return CreatedAtAction(nameof(Get), new { id = userResponseDto.Id }, userResponseDto);
-            }
-            catch (UserAlreadyExistsException)
-            {
-                return Conflict();
-            }
+            var userResponseDto = await _service.RegisterUserAsync(userRequestDto);
+            return CreatedAtAction(nameof(Get), new { id = userResponseDto.Id }, userResponseDto);
         }
 
         [AllowAnonymous]
@@ -42,15 +35,8 @@ namespace CarSelling.Controllers
         [HttpPost(nameof(Login))]
         public async Task<IActionResult> Login(UserLoginDto userDto)
         {
-            try
-            {
-                var result = await _service.LoginUserAsync(userDto);
-                return Ok(new { token = result });
-            }
-            catch (BadCredentialsException)
-            {
-                return Unauthorized();
-            }
+            var result = await _service.LoginUserAsync(userDto);
+            return Ok(new { token = result });
         }
 
         [HttpGet("{id}")]
@@ -63,34 +49,14 @@ namespace CarSelling.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UserRequestDto dto)
         {
-            try
-            {
-                await _service.UpdateUserAsync(id, dto);
-            }
-            catch (UserAlreadyExistsException)
-            {
-                return Conflict();
-            }
-            catch (NotFoundException)
-            {
-                return NotFound();
-            }
-
+            await _service.UpdateUserAsync(id, dto);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                await _service.DeleteUserAsync(id);
-            }
-            catch (NotFoundException)
-            {
-                return NotFound();
-            }
-
+            await _service.DeleteUserAsync(id);
             return NoContent();
         }
     }
