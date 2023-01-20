@@ -23,7 +23,7 @@ namespace CarSelling.Controllers
         [AllowAnonymous]
         [DisableJwtValidation]
         [HttpGet]
-        public async Task<IEnumerable<CarAdDto>> Get() => await _service.GetAllCarAdsAsync();
+        public async Task<IEnumerable<CarAdResponseDto>> Get() => await _service.GetAllCarAdsAsync();
 
         [AllowAnonymous]
         [DisableJwtValidation]
@@ -35,14 +35,14 @@ namespace CarSelling.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CarAdDto carAdDto)
+        public async Task<IActionResult> Create(CarAdRequestDto carAdDto)
         {
-            await _service.CreateCarAdAsync(carAdDto);
-            return CreatedAtAction(nameof(Get), new { id = carAdDto.Id }, carAdDto);
+            var carAdResponseDto = await _service.CreateCarAdAsync(carAdDto);
+            return CreatedAtAction(nameof(Get), new { id = carAdResponseDto.Id }, carAdResponseDto);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, CarAdDto carAdDto)
+        public async Task<IActionResult> Update(int id, CarAdRequestDto carAdDto)
         {
             await _service.UpdateCarAdAsync(id, carAdDto);
             return NoContent();

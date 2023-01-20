@@ -3,6 +3,7 @@ using CarSelling.Infrastructure;
 using CarSelling.Repositories;
 using CarSelling.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<UserPrincipal>();
+builder.Services.AddScoped<IAuthorizationHandler, ResourceOwnerHandler>();
 
 builder.Services.AddScoped<ICarAdRepository, CarAdRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();

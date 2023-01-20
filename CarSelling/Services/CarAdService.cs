@@ -2,6 +2,7 @@
 using CarSelling.Infrastructure;
 using CarSelling.Models;
 using CarSelling.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarSelling.Services
 {
@@ -9,18 +10,20 @@ namespace CarSelling.Services
     {
         private readonly ICarAdRepository _carAdRepository;
         private readonly UserPrincipal _userPrincipal;
+        private readonly IAuthorizationService _authorizationService;
 
-        public CarAdService(ICarAdRepository carAdRepository, UserPrincipal userPrincipal)
+        public CarAdService(ICarAdRepository carAdRepository, UserPrincipal userPrincipal, IAuthorizationService authorizationService)
         {
             _carAdRepository = carAdRepository;
             _userPrincipal = userPrincipal;
+            _authorizationService = authorizationService;
         }
 
-        public async Task CreateCarAdAsync(CarAdDto carAdDto)
+        public async Task<CarAdResponseDto> CreateCarAdAsync(CarAdRequestDto carAdRequestDto)
         {
-            var carAd = carAdDto.ToCarAd(await _userPrincipal.GetUserAsync());
+            var carAd = carAdRequestDto.ToCarAdWithUser(await _userPrincipal.GetUserAsync());
             await _carAdRepository.CreateCarAdAsync(carAd);
-            carAdDto.Id = carAd.Id;
+            return carAd.ToCarAdResponseDto();
         }
 
         public async Task DeleteCarAdAsync(int id)
@@ -31,30 +34,48 @@ namespace CarSelling.Services
                 throw new NotFoundException();
             }
 
+            var authResult = await _authorizationService.AuthorizeAsync(
+                _userPrincipal.UserClaimsPrincipal, ad, new ResourceOwnerRequirement());
+
+            if (!authResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
+
             await _carAdRepository.DeleteCarAdAsync(ad);
         }
 
-        public async Task<IEnumerable<CarAdDto>> GetAllCarAdsAsync()
+        public async Task<IEnumerable<CarAdResponseDto>> GetAllCarAdsAsync()
         {
             return (await _carAdRepository.GetAllCarAdsAsync())
-                .Select(ad => ad.ToCarAdDto());
+                .Select(ad => ad.ToCarAdResponseDto());
         }
 
-        public async Task<CarAdDto?> GetCarAdByIdAsync(int id)
+        public async Task<CarAdResponseDto?> GetCarAdByIdAsync(int id)
         {
             return (await _carAdRepository.GetCarAdByIdAsync(id))
-                .ToCarAdDtoNullable();
+                .ToCarAdWithUserResponseDto();
         }
 
-        public async Task UpdateCarAdAsync(int id, CarAdDto carAdDto)
+        public async Task UpdateCarAdAsync(int id, CarAdRequestDto carAdRequestDto)
         {
-            if (id != carAdDto.Id)
             {
-                throw new BadRequestException();
+                var carAdFromDB = await _carAdRepository.GetCarAdByIdAsync(id);
+                var authResult = await _authorizationService.AuthorizeAsync(
+                    _userPrincipal.UserClaimsPrincipal, carAdFromDB, new ResourceOwnerRequirement());
+                if (!authResult.Succeeded)
+                {
+                    throw new ForbidException();
+                }
+
+                if (carAdFromDB is not null)
+                {
+                    _carAdRepository.DetachCarAd(carAdFromDB);
+                }
             }
 
-            await _carAdRepository.UpdateCarAdAsync(
-                carAdDto.ToCarAd(await _userPrincipal.GetUserAsync()));
+            var carAdFromRequest = carAdRequestDto.ToCarAdWithId(id);
+            await _carAdRepository.UpdateCarAdAsync(carAdFromRequest);
         }
     }
 }

@@ -20,6 +20,7 @@ namespace CarSelling.Controllers
             if (ex is BadCredentialsException) return Unauthorized();
             if (ex is BadRequestException) return BadRequest();
             if (ex is UnauthorizedException) return Unauthorized();
+            if (ex is ForbidException) return Forbid();
 
             return Problem();
         }

@@ -31,7 +31,8 @@ namespace CarSelling.Repositories
 
         public async Task<CarAd?> GetCarAdByIdAsync(int id)
         {
-            var ad = await _context.CarAds.FindAsync(id);
+            var ad = await _context.CarAds.Include(c => c.CreatedBy)
+                .FirstOrDefaultAsync(c => c.Id == id);
             return ad;
         }
 
@@ -56,5 +57,10 @@ namespace CarSelling.Repositories
 
         public async Task<bool> CarAdWithIdExistsAsync(int id) =>
             await _context.CarAds.AnyAsync(ad => ad.Id == id);
+
+        public void DetachCarAd(CarAd carAd)
+        {
+            _context.Entry(carAd).State = EntityState.Detached;
+        }
     }
 }

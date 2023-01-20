@@ -10,5 +10,6 @@ namespace CarSelling.Repositories
         public Task UpdateCarAdAsync(CarAd carAd);
         public Task DeleteCarAdAsync(CarAd carAd);
         public Task<bool> CarAdWithIdExistsAsync(int id);
+        public void DetachCarAd(CarAd carAd);
     }
 }

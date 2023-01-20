@@ -2,6 +2,7 @@
 using CarSelling.Models;
 using CarSelling.Repositories;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace CarSelling.Infrastructure
 {
@@ -16,10 +17,14 @@ namespace CarSelling.Infrastructure
             _contextAccessor = httpContextAccessor;
         }
 
+        public ClaimsPrincipal UserClaimsPrincipal
+        {
+            get => _contextAccessor.HttpContext?.User ?? throw new UnauthorizedException();
+        }
+
         public async Task<User> GetUserAsync()
         {
-            var userCP = _contextAccessor.HttpContext?.User;
-            var idString = userCP?.FindFirst("userId")?.Value;
+            var idString = UserClaimsPrincipal.FindFirst("userId")?.Value;
             var success = int.TryParse(idString, out var userId);
             if (!success)
             {
