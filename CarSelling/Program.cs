@@ -28,6 +28,9 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("CarSellingDataba
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<UserPrincipal>();
+
 builder.Services.AddScoped<ICarAdRepository, CarAdRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 

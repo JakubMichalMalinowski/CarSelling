@@ -19,6 +19,7 @@ namespace CarSelling.Controllers
             if (ex is UserAlreadyExistsException) return Conflict();
             if (ex is BadCredentialsException) return Unauthorized();
             if (ex is BadRequestException) return BadRequest();
+            if (ex is UnauthorizedException) return Unauthorized();
 
             return Problem();
         }

@@ -8,15 +8,17 @@ namespace CarSelling.Services
     public class CarAdService : ICarAdService
     {
         private readonly ICarAdRepository _carAdRepository;
+        private readonly UserPrincipal _userPrincipal;
 
-        public CarAdService(ICarAdRepository carAdRepository)
+        public CarAdService(ICarAdRepository carAdRepository, UserPrincipal userPrincipal)
         {
             _carAdRepository = carAdRepository;
+            _userPrincipal = userPrincipal;
         }
 
         public async Task CreateCarAdAsync(CarAdDto carAdDto)
         {
-            var carAd = carAdDto.ToCarAd();
+            var carAd = carAdDto.ToCarAd(await _userPrincipal.GetUserAsync());
             await _carAdRepository.CreateCarAdAsync(carAd);
             carAdDto.Id = carAd.Id;
         }
@@ -51,7 +53,8 @@ namespace CarSelling.Services
                 throw new BadRequestException();
             }
 
-            await _carAdRepository.UpdateCarAdAsync(carAdDto.ToCarAd());
+            await _carAdRepository.UpdateCarAdAsync(
+                carAdDto.ToCarAd(await _userPrincipal.GetUserAsync()));
         }
     }
 }

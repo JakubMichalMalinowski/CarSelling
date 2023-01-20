@@ -36,7 +36,8 @@ namespace CarSelling.Controllers
         public async Task<IActionResult> Login(UserLoginDto userDto)
         {
             var result = await _service.LoginUserAsync(userDto);
-            return Ok(new { token = result });
+            return Ok(result);
+            //return Ok(new { token = result });
         }
 
         [HttpGet("{id}")]

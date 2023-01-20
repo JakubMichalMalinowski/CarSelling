@@ -4,7 +4,7 @@ namespace CarSelling.Infrastructure
 {
     public static class MappingMethods
     {
-        public static CarAd ToCarAd(this CarAdDto dto)
+        public static CarAd ToCarAd(this CarAdDto dto, User user)
         {
             return new CarAd
             {
@@ -14,6 +14,7 @@ namespace CarSelling.Infrastructure
                 Price = dto.Price,
                 Negotiable = dto.Negotiable,
                 PhotoPath = dto.PhotoPath,
+                CreatedBy = user
             };
         }
 
@@ -26,7 +27,7 @@ namespace CarSelling.Infrastructure
                 Description = ad.Description,
                 Price = ad.Price,
                 Negotiable = ad.Negotiable,
-                PhotoPath = ad.PhotoPath,
+                PhotoPath = ad.PhotoPath
             };
         }
 
