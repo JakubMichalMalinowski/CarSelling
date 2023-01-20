@@ -19,11 +19,11 @@ namespace CarSelling.Services
             _authorizationService = authorizationService;
         }
 
-        public async Task<CarAdResponseDto> CreateCarAdAsync(CarAdRequestDto carAdRequestDto)
+        public async Task<CarAdSimpleResponseDto> CreateCarAdAsync(CarAdRequestDto carAdRequestDto)
         {
             var carAd = carAdRequestDto.ToCarAdWithUser(await _userPrincipal.GetUserAsync());
             await _carAdRepository.CreateCarAdAsync(carAd);
-            return carAd.ToCarAdResponseDto();
+            return carAd.ToCarAdSimpleResponseDto();
         }
 
         public async Task DeleteCarAdAsync(int id)
@@ -45,16 +45,16 @@ namespace CarSelling.Services
             await _carAdRepository.DeleteCarAdAsync(ad);
         }
 
-        public async Task<IEnumerable<CarAdResponseDto>> GetAllCarAdsAsync()
+        public async Task<IEnumerable<CarAdSimpleResponseDto>> GetAllCarAdsAsync()
         {
             return (await _carAdRepository.GetAllCarAdsAsync())
-                .Select(ad => ad.ToCarAdResponseDto());
+                .Select(ad => ad.ToCarAdSimpleResponseDto());
         }
 
         public async Task<CarAdResponseDto?> GetCarAdByIdAsync(int id)
         {
             return (await _carAdRepository.GetCarAdByIdAsync(id))
-                .ToCarAdWithUserResponseDto();
+                .ToCarAdResponseDto();
         }
 
         public async Task UpdateCarAdAsync(int id, CarAdRequestDto carAdRequestDto)

@@ -31,9 +31,9 @@ namespace CarSelling.Infrastructure
             };
         }
 
-        public static CarAdResponseDto ToCarAdResponseDto(this CarAd ad)
+        public static CarAdSimpleResponseDto ToCarAdSimpleResponseDto(this CarAd ad)
         {
-            return new CarAdResponseDto
+            return new CarAdSimpleResponseDto
             {
                 Id = ad.Id,
                 Title = ad.Title,
@@ -44,21 +44,21 @@ namespace CarSelling.Infrastructure
             };
         }
 
-        public static CarAdResponseDto? ToCarAdWithUserResponseDto(this CarAd? ad)
+        public static CarAdResponseDto? ToCarAdResponseDto(this CarAd? ad)
         {
-            if (ad is null)
+            return ad is null ? null : new CarAdResponseDto
             {
-                return null;
-            }
-
-            var responseDto = ad.ToCarAdResponseDto();
-
-            responseDto.OwnerUserName = ad.CreatedBy.UserName;
-            responseDto.FirstName = ad.CreatedBy.FirstName;
-            responseDto.LastName = ad.CreatedBy.LastName;
-            responseDto.PhoneNo = ad.CreatedBy.PhoneNo;
-
-            return responseDto;
+                Id = ad.Id,
+                Title = ad.Title,
+                Description = ad.Description,
+                Price = ad.Price,
+                Negotiable = ad.Negotiable,
+                PhotoPath = ad.PhotoPath,
+                OwnerUserName = ad.CreatedBy.UserName,
+                FirstName = ad.CreatedBy.FirstName,
+                LastName = ad.CreatedBy.LastName,
+                PhoneNo = ad.CreatedBy.PhoneNo
+            };
         }
 
         public static UserResponseDto ToUserResponseDto(this UserRequestDto dto, int id)
