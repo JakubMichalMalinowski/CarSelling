@@ -67,11 +67,8 @@ namespace CarSelling.Services
                 {
                     throw new ForbidException();
                 }
-
-                if (carAdFromDB is not null)
-                {
-                    _carAdRepository.DetachCarAd(carAdFromDB);
-                }
+                
+                _carAdRepository.DetachCarAd(carAdFromDB);
             }
 
             var carAdFromRequest = carAdRequestDto.ToCarAdWithId(id);

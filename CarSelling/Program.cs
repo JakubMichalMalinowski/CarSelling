@@ -31,7 +31,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<UserPrincipal>();
-builder.Services.AddScoped<IAuthorizationHandler, ResourceOwnerHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, CarAdPermissionHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, UserPermissionHandler>();
 
 builder.Services.AddScoped<ICarAdRepository, CarAdRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();

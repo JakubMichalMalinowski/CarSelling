@@ -11,5 +11,6 @@ namespace CarSelling.Repositories
         public Task UpdateUserAsync(User user);
         public Task DeleteUserAsync(User user);
         public Task<bool> UserWithIdExistsAsync(int userId);
+        public void DetachUser(User? user);
     }
 }

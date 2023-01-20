@@ -2,6 +2,7 @@
 using CarSelling.Infrastructure;
 using CarSelling.Models;
 using CarSelling.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,11 +15,18 @@ namespace CarSelling.Services
     {
         private readonly IUserRepository _repository;
         private readonly IConfiguration _configuration;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly UserPrincipal _userPrincipal;
 
-        public UserService(IUserRepository repository, IConfiguration configuration)
+        public UserService(IUserRepository repository,
+            IConfiguration configuration,
+            IAuthorizationService authorizationService,
+            UserPrincipal userPrincipal)
         {
             _repository = repository;
             _configuration = configuration;
+            _authorizationService = authorizationService;
+            _userPrincipal = userPrincipal;
         }
 
         public async Task DeleteUserAsync(int id)
@@ -27,6 +35,16 @@ namespace CarSelling.Services
             if (user is null)
             {
                 throw new NotFoundException();
+            }
+
+            var authResult = await _authorizationService.AuthorizeAsync(
+                _userPrincipal.UserClaimsPrincipal,
+                user,
+                new ResourceOwnerRequirement());
+
+            if (!authResult.Succeeded)
+            {
+                throw new ForbidException();
             }
 
             await _repository.DeleteUserAsync(user);
@@ -99,6 +117,20 @@ namespace CarSelling.Services
 
         public async Task UpdateUserAsync(int id, UserRequestDto userDto)
         {
+            {
+                var userFromDB = await _repository.GetUserByIdAsync(id);
+                var authResult = await _authorizationService.AuthorizeAsync(
+                    _userPrincipal.UserClaimsPrincipal,
+                    userFromDB,
+                    new ResourceOwnerRequirement());
+                if (!authResult.Succeeded)
+                {
+                    throw new ForbidException();
+                }
+
+                _repository.DetachUser(userFromDB);
+            }
+
             var userNameExists = await _repository
                 .UserWithUserNameExistsAsync(userDto.UserName);
             if (userNameExists)

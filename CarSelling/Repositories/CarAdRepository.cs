@@ -58,9 +58,12 @@ namespace CarSelling.Repositories
         public async Task<bool> CarAdWithIdExistsAsync(int id) =>
             await _context.CarAds.AnyAsync(ad => ad.Id == id);
 
-        public void DetachCarAd(CarAd carAd)
+        public void DetachCarAd(CarAd? carAd)
         {
-            _context.Entry(carAd).State = EntityState.Detached;
+            if (carAd is not null)
+            {
+                _context.Entry(carAd).State = EntityState.Detached;
+            }
         }
     }
 }

@@ -26,6 +26,14 @@ namespace CarSelling.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public void DetachUser(User? user)
+        {
+            if (user is not null)
+            {
+                _context.Entry(user).State = EntityState.Detached;
+            }
+        }
+
         public async Task<User?> GetUserByIdAsync(int id) =>
             await _context.Users.FindAsync(id);
 
