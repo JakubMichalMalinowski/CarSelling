@@ -21,6 +21,9 @@ namespace CarSelling.Models
         public bool Negotiable { get; set; }
 
         [Required]
+        public Car Car { get; set; } = default!;
+
+        [Required]
         public User CreatedBy { get; set; } = default!;
     }
 }
