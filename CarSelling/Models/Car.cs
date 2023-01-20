@@ -12,7 +12,7 @@ namespace CarSelling.Models
 
         [Required]
         [Range(0, 30)]
-        public ushort EngineCapacity { get; set; }
+        public double EngineCapacity { get; set; }
 
         [Required]
         [Range(0, 10000)]

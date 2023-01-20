@@ -16,5 +16,18 @@ namespace CarSelling.Models
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? PhoneNo { get; set; }
+
+        public string Make { get; set; } = string.Empty;
+        public string Model { get; set; } = string.Empty;
+        public ushort ProductionYear { get; set; }
+
+        public Body Body { get; set; }
+        public FuelType FuelType { get; set; }
+        public double EngineCapacity { get; set; }
+        public ushort Power { get; set; }
+        public uint Mileage { get; set; }
+        public Drivetrain Drivetrain { get; set; }
+        public Transmission Transmission { get; set; }
+
     }
 }

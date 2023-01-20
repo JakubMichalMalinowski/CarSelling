@@ -14,7 +14,8 @@ namespace CarSelling.Infrastructure
                 Price = dto.Price,
                 Negotiable = dto.Negotiable,
                 PhotoPath = dto.PhotoPath,
-                CreatedBy = user
+                CreatedBy = user,
+                Car = dto.ToCar()
             };
         }
 
@@ -27,7 +28,8 @@ namespace CarSelling.Infrastructure
                 Description = dto.Description,
                 Price = dto.Price,
                 Negotiable = dto.Negotiable,
-                PhotoPath = dto.PhotoPath
+                PhotoPath = dto.PhotoPath,
+                Car = dto.ToCar()
             };
         }
 
@@ -54,10 +56,39 @@ namespace CarSelling.Infrastructure
                 Price = ad.Price,
                 Negotiable = ad.Negotiable,
                 PhotoPath = ad.PhotoPath,
+
                 OwnerUserName = ad.CreatedBy.UserName,
                 FirstName = ad.CreatedBy.FirstName,
                 LastName = ad.CreatedBy.LastName,
-                PhoneNo = ad.CreatedBy.PhoneNo
+                PhoneNo = ad.CreatedBy.PhoneNo,
+
+                Make = ad.Car.Make,
+                Model = ad.Car.Model,
+                ProductionYear = ad.Car.ProductionYear,
+                Body = ad.Car.Body,
+                FuelType = ad.Car.FuelType,
+                EngineCapacity = ad.Car.EngineCapacity,
+                Power = ad.Car.Power,
+                Mileage = ad.Car.Mileage,
+                Drivetrain = ad.Car.Drivetrain,
+                Transmission = ad.Car.Transmission
+            };
+        }
+
+        private static Car ToCar(this CarAdRequestDto dto)
+        {
+            return new Car
+            {
+                Make = dto.Make,
+                Model = dto.Model,
+                ProductionYear = dto.ProductionYear,
+                Body = dto.Body,
+                FuelType = dto.FuelType,
+                EngineCapacity = dto.EngineCapacity,
+                Power = dto.Power,
+                Mileage = dto.Mileage,
+                Drivetrain = dto.Drivetrain,
+                Transmission = dto.Transmission
             };
         }
 
