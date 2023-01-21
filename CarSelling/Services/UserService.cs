@@ -83,7 +83,7 @@ namespace CarSelling.Services
                 }),
                 Expires = DateTime.UtcNow.AddSeconds(double.Parse(_configuration["JwtSettings:exp"]!)),
                 Issuer = issuer,
-                Audience = audience,                
+                Audience = audience,
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha512Signature)
@@ -117,26 +117,28 @@ namespace CarSelling.Services
 
         public async Task UpdateUserAsync(int id, UserRequestDto userDto)
         {
+            var userFromDB = await _repository.GetUserByIdAsync(id);
+            var authResult = await _authorizationService.AuthorizeAsync(
+                _userPrincipal.UserClaimsPrincipal,
+                userFromDB,
+                new ResourceOwnerRequirement());
+            if (!authResult.Succeeded)
             {
-                var userFromDB = await _repository.GetUserByIdAsync(id);
-                var authResult = await _authorizationService.AuthorizeAsync(
-                    _userPrincipal.UserClaimsPrincipal,
-                    userFromDB,
-                    new ResourceOwnerRequirement());
-                if (!authResult.Succeeded)
+                throw new ForbidException();
+            }
+
+            if (userFromDB?.UserName != userDto.UserName)
+            {
+                var userNameExists = await _repository
+                    .UserWithUserNameExistsAsync(userDto.UserName);
+
+                if (userNameExists)
                 {
-                    throw new ForbidException();
+                    throw new UserAlreadyExistsException();
                 }
-
-                _repository.DetachUser(userFromDB);
             }
 
-            var userNameExists = await _repository
-                .UserWithUserNameExistsAsync(userDto.UserName);
-            if (userNameExists)
-            {
-                throw new UserAlreadyExistsException();
-            }
+            _repository.DetachUser(userFromDB);
 
             var passwordHasher = new PasswordHasher<User>();
             var user = userDto.ToUserWithoutPassword(id);
