@@ -50,8 +50,19 @@ namespace CarSelling.Services
             await _repository.DeleteUserAsync(user);
         }
 
-        public async Task<UserResponseDto?> GetUserByIdAsync(int id) =>
-            (await _repository.GetUserByIdAsync(id)).ToUserResponseDto();
+        public async Task<UserResponseDto?> GetUserByIdAsync(int id)
+        {
+            var user = await _repository.GetUserByIdAsync(id);
+            var authResult = await _authorizationService.AuthorizeAsync(
+                _userPrincipal.UserClaimsPrincipal,
+                user, new ResourceOwnerRequirement());
+            if (!authResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
+
+            return user.ToUserResponseDto();
+        }
 
         public async Task<string> LoginUserAsync(UserLoginDto userDto)
         {
