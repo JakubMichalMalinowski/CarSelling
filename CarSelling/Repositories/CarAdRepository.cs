@@ -32,13 +32,14 @@ namespace CarSelling.Repositories
         public async Task<CarAd?> GetCarAdByIdAsync(int id)
         {
             var ad = await _context.CarAds.Include(c => c.CreatedBy)
+                .Include(c => c.Car)
                 .FirstOrDefaultAsync(c => c.Id == id);
             return ad;
         }
 
         public async Task UpdateCarAdAsync(CarAd carAd)
         {
-            _context.Entry(carAd).State = EntityState.Modified;
+            _context.Update(carAd);
 
             try
             {

@@ -5,6 +5,7 @@ using CarSelling.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +23,10 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(config =>
+{
+    config.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 builder.Services.AddDbContext<CarSellingDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("CarSellingDatabase")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -35,6 +39,7 @@ builder.Services.AddScoped<IAuthorizationHandler, CarAdPermissionHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, UserPermissionHandler>();
 
 builder.Services.AddScoped<ICarAdRepository, CarAdRepository>();
+builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<ICarAdService, CarAdService>();

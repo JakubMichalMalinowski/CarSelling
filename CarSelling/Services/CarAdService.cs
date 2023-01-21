@@ -9,12 +9,17 @@ namespace CarSelling.Services
     public class CarAdService : ICarAdService
     {
         private readonly ICarAdRepository _carAdRepository;
+        private readonly ICarRepository _carRepository;
         private readonly UserPrincipal _userPrincipal;
         private readonly IAuthorizationService _authorizationService;
 
-        public CarAdService(ICarAdRepository carAdRepository, UserPrincipal userPrincipal, IAuthorizationService authorizationService)
+        public CarAdService(ICarAdRepository carAdRepository,
+            ICarRepository carRepository,
+            UserPrincipal userPrincipal,
+            IAuthorizationService authorizationService)
         {
             _carAdRepository = carAdRepository;
+            _carRepository = carRepository;
             _userPrincipal = userPrincipal;
             _authorizationService = authorizationService;
         }
@@ -42,7 +47,9 @@ namespace CarSelling.Services
                 throw new ForbidException();
             }
 
+            Car car = ad.Car;
             await _carAdRepository.DeleteCarAdAsync(ad);
+            await _carRepository.DeleteCarAsync(car);
         }
 
         public async Task<IEnumerable<CarAdSimpleResponseDto>> GetAllCarAdsAsync()
@@ -57,21 +64,27 @@ namespace CarSelling.Services
                 .ToCarAdResponseDto();
         }
 
-        public async Task UpdateCarAdAsync(int id, CarAdRequestDto carAdRequestDto)
+        public async Task UpdateCarAdAsync(int adId, CarAdRequestDto carAdRequestDto)
         {
+            var carAdFromDB = await _carAdRepository.GetCarAdByIdAsync(adId);
+            var authResult = await _authorizationService.AuthorizeAsync(
+                _userPrincipal.UserClaimsPrincipal, carAdFromDB, new ResourceOwnerRequirement());
+            if (!authResult.Succeeded)
             {
-                var carAdFromDB = await _carAdRepository.GetCarAdByIdAsync(id);
-                var authResult = await _authorizationService.AuthorizeAsync(
-                    _userPrincipal.UserClaimsPrincipal, carAdFromDB, new ResourceOwnerRequirement());
-                if (!authResult.Succeeded)
-                {
-                    throw new ForbidException();
-                }
-                
-                _carAdRepository.DetachCarAd(carAdFromDB);
+                throw new ForbidException();
             }
 
-            var carAdFromRequest = carAdRequestDto.ToCarAdWithId(id);
+            if (carAdFromDB is null)
+            {
+                throw new NotFoundException();
+            }
+            var car = carAdFromDB.Car;
+            int carId = car.Id;
+
+            _carAdRepository.DetachCarAd(carAdFromDB);
+            _carRepository.DetachCar(car);
+
+            var carAdFromRequest = carAdRequestDto.ToCarAdWithIds(adId, carId);
             await _carAdRepository.UpdateCarAdAsync(carAdFromRequest);
         }
     }

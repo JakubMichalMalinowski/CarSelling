@@ -19,17 +19,17 @@ namespace CarSelling.Infrastructure
             };
         }
 
-        public static CarAd ToCarAdWithId(this CarAdRequestDto dto, int id)
+        public static CarAd ToCarAdWithIds(this CarAdRequestDto dto, int adId, int carId)
         {
             return new CarAd
             {
-                Id = id,
+                Id = adId,
                 Title = dto.Title,
                 Description = dto.Description,
                 Price = dto.Price,
                 Negotiable = dto.Negotiable,
                 PhotoPath = dto.PhotoPath,
-                Car = dto.ToCar()
+                Car = dto.ToCar(carId)
             };
         }
 
@@ -90,6 +90,13 @@ namespace CarSelling.Infrastructure
                 Drivetrain = dto.Drivetrain,
                 Transmission = dto.Transmission
             };
+        }
+
+        private static Car ToCar(this CarAdRequestDto dto, int carId)
+        {
+            var car = dto.ToCar();
+            car.Id = carId;
+            return car;
         }
 
         public static UserResponseDto ToUserResponseDto(this UserRequestDto dto, int id)
