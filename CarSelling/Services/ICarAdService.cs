@@ -7,7 +7,7 @@ namespace CarSelling.Services
     {
         public Task<IEnumerable<CarAdSimpleResponseDto>> GetAllCarAdsAsync();
         public Task<CarAdResponseDto?> GetCarAdByIdAsync(int id);
-        public Task<CarAdSimpleResponseDto> CreateCarAdAsync(CarAdRequestDto carAdDto);
+        public Task<CarAdResponseDto> CreateCarAdAsync(CarAdRequestDto carAdDto);
         public Task UpdateCarAdAsync(int adId, CarAdRequestDto carAdDto);
         public Task DeleteCarAdAsync(int id);
     }

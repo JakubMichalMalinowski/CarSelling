@@ -37,8 +37,8 @@ namespace CarSelling.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CarAdRequestDto carAdDto)
         {
-            var carAdSimpleResponseDto = await _service.CreateCarAdAsync(carAdDto);
-            return CreatedAtAction(nameof(Get), new { id = carAdSimpleResponseDto.Id }, carAdSimpleResponseDto);
+            var carAdResponseDto = await _service.CreateCarAdAsync(carAdDto);
+            return CreatedAtAction(nameof(Get), new { id = carAdResponseDto.Id }, carAdResponseDto);
         }
 
         [HttpPut("{id}")]

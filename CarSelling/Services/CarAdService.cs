@@ -24,11 +24,11 @@ namespace CarSelling.Services
             _authorizationService = authorizationService;
         }
 
-        public async Task<CarAdSimpleResponseDto> CreateCarAdAsync(CarAdRequestDto carAdRequestDto)
+        public async Task<CarAdResponseDto> CreateCarAdAsync(CarAdRequestDto carAdRequestDto)
         {
             var carAd = carAdRequestDto.ToCarAdWithUser(await _userPrincipal.GetUserAsync());
             await _carAdRepository.CreateCarAdAsync(carAd);
-            return carAd.ToCarAdSimpleResponseDto();
+            return carAd.ToCarAdResponseDto() ?? throw new NotFoundException();
         }
 
         public async Task DeleteCarAdAsync(int id)
