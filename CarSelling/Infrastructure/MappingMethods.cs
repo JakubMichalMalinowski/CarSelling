@@ -13,7 +13,6 @@ namespace CarSelling.Infrastructure
                 Description = dto.Description,
                 Price = dto.Price,
                 Negotiable = dto.Negotiable,
-                PhotoPath = dto.PhotoPath,
                 CreatedBy = user,
                 Car = dto.ToCar()
             };
@@ -28,7 +27,6 @@ namespace CarSelling.Infrastructure
                 Description = dto.Description,
                 Price = dto.Price,
                 Negotiable = dto.Negotiable,
-                PhotoPath = dto.PhotoPath,
                 Car = dto.ToCar(carId)
             };
         }
@@ -41,8 +39,7 @@ namespace CarSelling.Infrastructure
                 Title = ad.Title,
                 Description = ad.Description,
                 Price = ad.Price,
-                Negotiable = ad.Negotiable,
-                PhotoPath = ad.PhotoPath
+                Negotiable = ad.Negotiable
             };
         }
 
@@ -55,7 +52,6 @@ namespace CarSelling.Infrastructure
                 Description = ad.Description,
                 Price = ad.Price,
                 Negotiable = ad.Negotiable,
-                PhotoPath = ad.PhotoPath,
 
                 OwnerUserName = ad.CreatedBy.UserName,
                 FirstName = ad.CreatedBy.FirstName,

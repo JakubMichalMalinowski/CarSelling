@@ -10,7 +10,6 @@ namespace CarSelling.Models
         [Required]
         public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public string? PhotoPath { get; set; }
 
         [Required]
         [Precision(18,2)]
