@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CarSelling.Models.CarAd>
+﻿@model IEnumerable<CarSelling.Models.CarAdSimpleResponseDto>
 
 @{
     ViewData["Title"] = "Dev";
@@ -6,10 +6,10 @@
 
 <h1>Dev</h1>
 
-<p>
+@*<p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+*@<table class="table">
     <thead>
         <tr>
             <th>
@@ -27,8 +27,8 @@
             <th>
                 @Html.DisplayNameFor(model => model.Negotiable)
             </th>
-            <th></th>
-        </tr>
+@*            <th></th>
+*@        </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
@@ -48,12 +48,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Negotiable)
             </td>
-            <td>
+@*            <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
                 @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
                 @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
             </td>
-        </tr>
+*@        </tr>
 }
     </tbody>
 </table>

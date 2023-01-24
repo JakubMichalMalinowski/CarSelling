@@ -7,18 +7,13 @@ namespace CarSellingApp.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         public async Task<IActionResult> Dev()
         {
-            IEnumerable<CarAd>? carAds = null;
+            IEnumerable<CarAdSimpleResponseDto>? carAds = null;
             using (HttpClient client = new())
             {
                 client.BaseAddress = new Uri("https://localhost:7276/api/");
-                carAds = await client.GetFromJsonAsync<IEnumerable<CarAd>>("carad");
+                carAds = await client.GetFromJsonAsync<IEnumerable<CarAdSimpleResponseDto>>("carad");
             }
 
             if (carAds is not null)
