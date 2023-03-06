@@ -14,7 +14,8 @@ namespace CarSelling.Infrastructure
                 Price = dto.Price,
                 Negotiable = dto.Negotiable,
                 CreatedBy = user,
-                Car = dto.ToCar()
+                Car = dto.ToCar(),
+                PhotoPaths = dto.PhotoPaths
             };
         }
 

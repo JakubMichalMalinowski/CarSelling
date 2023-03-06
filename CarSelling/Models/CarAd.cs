@@ -25,6 +25,6 @@ namespace CarSelling.Models
         [Required]
         public User CreatedBy { get; set; } = default!;
 
-        public List<FilePath> PhotoPaths { get; set; } = new List<FilePath>();
+        public List<FilePath>? PhotoPaths { get; set; }
     }
 }
