@@ -26,5 +26,11 @@ namespace CarSelling.Controllers
                 yield return path;
             }
         }
+
+        [HttpGet]
+        public HttpResponseMessage Download(int photoId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
