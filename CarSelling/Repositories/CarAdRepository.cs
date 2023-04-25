@@ -33,6 +33,7 @@ namespace CarSelling.Repositories
         {
             var ad = await _context.CarAds.Include(c => c.CreatedBy)
                 .Include(c => c.Car)
+                .Include(c => c.PhotoPaths)
                 .FirstOrDefaultAsync(c => c.Id == id);
             return ad;
         }

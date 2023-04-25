@@ -8,7 +8,6 @@ namespace CarSelling.Models
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public string? PhotoPath { get; set; }
         public decimal Price { get; set; }
         public bool Negotiable { get; set; }
 
@@ -28,6 +27,6 @@ namespace CarSelling.Models
         public uint Mileage { get; set; }
         public Drivetrain Drivetrain { get; set; }
         public Transmission Transmission { get; set; }
-
+        public List<FilePath>? PhotoPaths { get; set; }
     }
 }

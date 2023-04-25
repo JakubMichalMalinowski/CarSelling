@@ -1,5 +1,4 @@
 ﻿using CarSelling.Models;
-using System.Reflection.Metadata.Ecma335;
 
 namespace CarSelling.Infrastructure
 {
@@ -28,7 +27,8 @@ namespace CarSelling.Infrastructure
                 Description = dto.Description,
                 Price = dto.Price,
                 Negotiable = dto.Negotiable,
-                Car = dto.ToCar(carId)
+                Car = dto.ToCar(carId),
+                PhotoPaths = dto.PhotoPaths
             };
         }
 
@@ -68,7 +68,9 @@ namespace CarSelling.Infrastructure
                 Power = ad.Car.Power,
                 Mileage = ad.Car.Mileage,
                 Drivetrain = ad.Car.Drivetrain,
-                Transmission = ad.Car.Transmission
+                Transmission = ad.Car.Transmission,
+
+                PhotoPaths = ad.PhotoPaths
             };
         }
 

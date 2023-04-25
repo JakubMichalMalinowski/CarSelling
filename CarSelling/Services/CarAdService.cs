@@ -81,6 +81,8 @@ namespace CarSelling.Services
             var car = carAdFromDB.Car;
             int carId = car.Id;
 
+            carAdFromDB.PhotoPaths?.RemoveAll(p => true);
+
             _carAdRepository.DetachCarAd(carAdFromDB);
             _carRepository.DetachCar(car);
 
