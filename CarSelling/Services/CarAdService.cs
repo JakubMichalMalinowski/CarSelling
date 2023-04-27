@@ -33,12 +33,7 @@ namespace CarSelling.Services
 
         public async Task DeleteCarAdAsync(int id)
         {
-            var ad = await _carAdRepository.GetCarAdByIdAsync(id);
-            if (ad is null)
-            {
-                throw new NotFoundException();
-            }
-
+            var ad = await _carAdRepository.GetCarAdByIdAsync(id) ?? throw new NotFoundException();
             var authResult = await _authorizationService.AuthorizeAsync(
                 _userPrincipal.UserClaimsPrincipal, ad, new ResourceOwnerRequirement());
 

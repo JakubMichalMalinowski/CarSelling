@@ -27,6 +27,6 @@ namespace CarSelling.Models
         public uint Mileage { get; set; }
         public Drivetrain Drivetrain { get; set; }
         public Transmission Transmission { get; set; }
-        public List<FilePath>? PhotoPaths { get; set; }
+        public int[]? PhotoIds { get; set; }
     }
 }

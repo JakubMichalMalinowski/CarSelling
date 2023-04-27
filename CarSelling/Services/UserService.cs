@@ -31,12 +31,7 @@ namespace CarSelling.Services
 
         public async Task DeleteUserAsync(int id)
         {
-            var user = await _repository.GetUserByIdAsync(id);
-            if (user is null)
-            {
-                throw new NotFoundException();
-            }
-
+            var user = await _repository.GetUserByIdAsync(id) ?? throw new NotFoundException();
             var authResult = await _authorizationService.AuthorizeAsync(
                 _userPrincipal.UserClaimsPrincipal,
                 user,
@@ -66,12 +61,7 @@ namespace CarSelling.Services
 
         public async Task<string> LoginUserAsync(UserLoginDto userDto)
         {
-            var user = await _repository.GetUserWithUserNameAsync(userDto.UserName);
-            if (user is null)
-            {
-                throw new BadCredentialsException();
-            }
-
+            var user = await _repository.GetUserWithUserNameAsync(userDto.UserName) ?? throw new BadCredentialsException();
             var passwordHasher = new PasswordHasher<User>();
             if (passwordHasher.VerifyHashedPassword(
                 user, user.HashedPassword, userDto.Password)

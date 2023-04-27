@@ -27,10 +27,15 @@ namespace CarSelling.Controllers
             }
         }
 
-        [HttpGet]
-        public HttpResponseMessage Download(int photoId)
+        [AllowAnonymous]
+        [DisableJwtValidation]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Download(int id)
         {
-            throw new NotImplementedException();
+            var stream = await _service.DownloadFileAsync(id);            
+
+            return File(stream.PhotoStream, stream.MimeType
+                ?? "application/octet-stream");
         }
     }
 }

@@ -1,18 +1,19 @@
 ﻿using CarSelling.Exceptions;
+using CarSelling.Models;
 using CarSelling.Repositories;
-using System.Drawing;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace CarSelling.Services
 {
     public class PhotoService : IPhotoService
     {
         private readonly IConfiguration _configuration;
-        private readonly ICarAdRepository _carAdRepository;
+        private readonly IFilePathRepository _repository;
 
-        public PhotoService(IConfiguration configuration, ICarAdRepository carAdRepository)
+        public PhotoService(IConfiguration configuration, IFilePathRepository repository)
         {
             _configuration = configuration;
-            _carAdRepository = carAdRepository;
+            _repository = repository;
         }
 
         public async IAsyncEnumerable<string> UploadFilesAsync(List<IFormFile> files)
@@ -40,9 +41,16 @@ namespace CarSelling.Services
             }
         }
 
-        public Image DownloadFile(int photoId)
+        public async Task<MimedStream> DownloadFileAsync(int photoId)
         {
-            throw new NotImplementedException();
+            var filePath = await _repository.GetFilePathByIdAsync(photoId);
+
+            var stream = File.OpenRead(filePath?.Path
+                ?? throw new NotFoundException());
+
+            new FileExtensionContentTypeProvider().TryGetContentType(filePath.Path, out var type);
+
+            return new MimedStream(stream, type);
         }
     }
 }

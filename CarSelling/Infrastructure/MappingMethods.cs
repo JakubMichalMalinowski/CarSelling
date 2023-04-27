@@ -70,7 +70,7 @@ namespace CarSelling.Infrastructure
                 Drivetrain = ad.Car.Drivetrain,
                 Transmission = ad.Car.Transmission,
 
-                PhotoPaths = ad.PhotoPaths
+                PhotoIds = ad.PhotoPaths?.Select(filePath => filePath.Id).ToArray()
             };
         }
 

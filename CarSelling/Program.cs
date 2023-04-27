@@ -41,6 +41,7 @@ builder.Services.AddScoped<IAuthorizationHandler, UserPermissionHandler>();
 builder.Services.AddScoped<ICarAdRepository, CarAdRepository>();
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IFilePathRepository, FilePathRepository>();
 
 builder.Services.AddScoped<ICarAdService, CarAdService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
