@@ -2,14 +2,24 @@
 {
     public class EncodeBase64Service : IEncodeService
     {
-        public async Task<string> EncodeFileAsync(IFormFile file)
+        public IList<string> EncodeFiles(List<IFormFile> files)
         {
-            MemoryStream stream = new();
-            await file.CopyToAsync(stream);
-            string encodedFile = Convert
+            List<string> encodedFiles = new();
+            files.ForEach(file =>
+            {
+                MemoryStream stream = new();
+
+                file.CopyTo(stream);
+
+                string encodedFile = Convert
                 .ToBase64String(stream.ToArray());
-            stream.Dispose();
-            return encodedFile;
+
+                stream.Dispose();
+
+                encodedFiles.Add(encodedFile);
+            });
+
+            return encodedFiles;
         }
     }
 }

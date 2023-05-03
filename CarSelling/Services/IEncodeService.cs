@@ -2,6 +2,6 @@
 {
     public interface IEncodeService
     {
-        public Task<string> EncodeFileAsync(IFormFile file);
+        public IList<string> EncodeFiles(List<IFormFile> files);
     }
 }

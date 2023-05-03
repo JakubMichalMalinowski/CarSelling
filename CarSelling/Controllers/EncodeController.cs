@@ -15,10 +15,10 @@ namespace CarSelling.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Encode(IFormFile file)
+        public IActionResult Encode(List<IFormFile> files)
         {
-            string encodedFile = await _service.EncodeFileAsync(file);
-            return Ok(encodedFile);
+            IList<string> encodedFiles = _service.EncodeFiles(files);
+            return Ok(encodedFiles);
         }
     }
 }
