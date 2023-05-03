@@ -53,6 +53,7 @@ builder.Services.AddScoped<IFilePathRepository, FilePathRepository>();
 builder.Services.AddScoped<ICarAdService, CarAdService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddTransient<IEncodeService, EncodeBase64Service>();
 
 var app = builder.Build();
 
