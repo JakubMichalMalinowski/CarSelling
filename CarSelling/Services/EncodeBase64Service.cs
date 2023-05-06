@@ -1,10 +1,12 @@
-﻿namespace CarSelling.Services
+﻿using CarSelling.Models;
+
+namespace CarSelling.Services
 {
     public class EncodeBase64Service : IEncodeService
     {
-        public IList<string> EncodeFiles(List<IFormFile> files)
+        public IList<MimedString> EncodeFiles(List<IFormFile> files)
         {
-            List<string> encodedFiles = new();
+            List<MimedString> encodedFiles = new();
             files.ForEach(file =>
             {
                 MemoryStream stream = new();
@@ -16,10 +18,16 @@
 
                 stream.Dispose();
 
-                encodedFiles.Add(encodedFile);
+                encodedFiles.Add(
+                    new MimedString(file.ContentType, encodedFile));
             });
 
             return encodedFiles;
+        }
+
+        public byte[] DecodeFile(string encodedFile)
+        {
+            return Convert.FromBase64String(encodedFile);
         }
     }
 }

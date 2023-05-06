@@ -1,9 +1,10 @@
-﻿using CarSelling.Services;
+﻿using CarSelling.Models;
+using CarSelling.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSelling.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[action]")]
     [ApiController]
     public class EncodeController : ControllerBase
     {
@@ -17,8 +18,15 @@ namespace CarSelling.Controllers
         [HttpPost]
         public IActionResult Encode(List<IFormFile> files)
         {
-            IList<string> encodedFiles = _service.EncodeFiles(files);
+            var encodedFiles = _service.EncodeFiles(files);
             return Ok(encodedFiles);
+        }
+
+        [HttpPost]
+        public IActionResult Decode(MimedString encodedFileWithType)
+        {
+            return File(_service.DecodeFile(encodedFileWithType.Content),
+                encodedFileWithType.Type);
         }
     }
 }
