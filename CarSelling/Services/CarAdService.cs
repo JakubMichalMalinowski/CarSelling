@@ -28,12 +28,13 @@ namespace CarSelling.Services
         {
             var carAd = carAdRequestDto.ToCarAdWithUser(await _userPrincipal.GetUserAsync());
             await _carAdRepository.CreateCarAdAsync(carAd);
-            return carAd.ToCarAdResponseDto() ?? throw new NotFoundException();
+            return (await _carAdRepository.GetCarAdByIdAsync(carAd.Id))
+                .ToCarAdResponseDto() ?? throw new NotFoundException();
         }
 
         public async Task DeleteCarAdAsync(int id)
         {
-            var ad = await _carAdRepository.GetCarAdByIdAsync(id) ?? throw new NotFoundException();
+            var ad = await _carAdRepository.GetCarAdAsync(id) ?? throw new NotFoundException();
             var authResult = await _authorizationService.AuthorizeAsync(
                 _userPrincipal.UserClaimsPrincipal, ad, new ResourceOwnerRequirement());
 
@@ -61,7 +62,7 @@ namespace CarSelling.Services
 
         public async Task UpdateCarAdAsync(int adId, CarAdRequestDto carAdRequestDto)
         {
-            var carAdFromDB = await _carAdRepository.GetCarAdByIdAsync(adId);
+            var carAdFromDB = await _carAdRepository.GetCarAdAsync(adId);
             var authResult = await _authorizationService.AuthorizeAsync(
                 _userPrincipal.UserClaimsPrincipal, carAdFromDB, new ResourceOwnerRequirement());
             if (!authResult.Succeeded)
@@ -77,6 +78,7 @@ namespace CarSelling.Services
             int carId = car.Id;
 
             carAdFromDB.PhotoPaths?.RemoveAll(p => true);
+            carAdFromDB.EncodedPhotos?.RemoveAll(p => true);
 
             _carAdRepository.DetachCarAd(carAdFromDB);
             _carRepository.DetachCar(car);

@@ -1,4 +1,5 @@
 ﻿using CarSelling.Infrastructure;
+using CarSelling.Models;
 using CarSelling.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,11 +20,11 @@ namespace CarSelling.Controllers
         }
 
         [HttpPost]
-        public async IAsyncEnumerable<string> Upload(List<IFormFile> files)
+        public async IAsyncEnumerable<object> Upload(List<IFormFile> files)
         {
             await foreach (var path in _service.UploadFilesAsync(files))
             {
-                yield return path;
+                yield return new { Path = path };
             }
         }
 

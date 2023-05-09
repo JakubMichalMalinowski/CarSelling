@@ -13,9 +13,9 @@ namespace CarSelling.Infrastructure
                 Price = dto.Price,
                 Negotiable = dto.Negotiable,
                 CreatedBy = user,
-                Car = dto.ToCar(),
-                PhotoPaths = dto.PhotoPaths
-            };
+                Car = dto.ToCar()
+            }
+            .RetrievePhotos(dto);
         }
 
         public static CarAd ToCarAdWithIds(this CarAdRequestDto dto, int adId, int carId)
@@ -27,25 +27,62 @@ namespace CarSelling.Infrastructure
                 Description = dto.Description,
                 Price = dto.Price,
                 Negotiable = dto.Negotiable,
-                Car = dto.ToCar(carId),
-                PhotoPaths = dto.PhotoPaths
-            };
+                Car = dto.ToCar(carId)
+            }
+            .RetrievePhotos(dto);
+        }
+
+        private static CarAd RetrievePhotos(this CarAd carAd, CarAdRequestDto dto)
+        {
+            if (dto.PhotoPaths?.Count > 0)
+            {
+                carAd.PhotoPaths = dto.PhotoPaths;
+                return carAd;
+            }
+
+            if (dto.EncodedPhotos?.Count > 0)
+            {
+                carAd.EncodedPhotos = dto.EncodedPhotos;
+                return carAd;
+            }
+
+            return carAd;
         }
 
         public static CarAdSimpleResponseDto ToCarAdSimpleResponseDto(this CarAd ad)
         {
+            (int id, PhotoLocation location)? mainPhoto = ad.GetMainPhoto();
             return new CarAdSimpleResponseDto
             {
                 Id = ad.Id,
                 Title = ad.Title,
                 Description = ad.Description,
                 Price = ad.Price,
-                Negotiable = ad.Negotiable
+                Negotiable = ad.Negotiable,
+                MainPhotoId = mainPhoto?.id,
+                MainPhotoLocation = mainPhoto?.location
             };
         }
 
-        public static CarAdResponseDto? ToCarAdResponseDto(this CarAd? ad)
+        private static (int id, PhotoLocation location)? GetMainPhoto(this CarAd ad)
         {
+            if (ad.PhotoPaths?.Count > 0)
+            {
+                return (ad.PhotoPaths.First().Id, PhotoLocation.FileStorage);
+            }
+
+            if (ad.EncodedPhotos?.Count > 0)
+            {
+                return (ad.EncodedPhotos.First().Id, PhotoLocation.EncodedFile);
+            }
+
+            return null;
+        }
+
+        public static CarAdResponseDto? ToCarAdResponseDto(this CarAdDto? ad)
+        {
+            (int[]? ids, PhotoLocation? location)? photos = ad?.GetPhotos();
+
             return ad is null ? null : new CarAdResponseDto
             {
                 Id = ad.Id,
@@ -70,8 +107,26 @@ namespace CarSelling.Infrastructure
                 Drivetrain = ad.Car.Drivetrain,
                 Transmission = ad.Car.Transmission,
 
-                PhotoIds = ad.PhotoPaths?.Select(filePath => filePath.Id).ToArray()
+                PhotoIds = photos?.ids,
+                PhotoLocation = photos?.location
             };
+        }
+
+        private static (int[]? ids, PhotoLocation? location)? GetPhotos(this CarAdDto ad)
+        {
+            if (ad.PhotoPathIds?.Length > 0)
+            {
+                return (ad.PhotoPathIds,
+                    PhotoLocation.FileStorage);
+            }
+
+            if (ad.EncodedPhotoIds?.Length > 0)
+            {
+                return (ad.EncodedPhotoIds,
+                    PhotoLocation.EncodedFile);
+            }
+
+            return null;
         }
 
         private static Car ToCar(this CarAdRequestDto dto)

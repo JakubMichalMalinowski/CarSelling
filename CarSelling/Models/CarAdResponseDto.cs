@@ -28,5 +28,6 @@ namespace CarSelling.Models
         public Drivetrain Drivetrain { get; set; }
         public Transmission Transmission { get; set; }
         public int[]? PhotoIds { get; set; }
+        public PhotoLocation? PhotoLocation { get; set; }
     }
 }

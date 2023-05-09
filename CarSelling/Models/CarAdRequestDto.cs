@@ -52,5 +52,7 @@ namespace CarSelling.Models
         public Transmission Transmission { get; set; }
 
         public List<FilePath>? PhotoPaths { get; set; }
+
+        public List<EncodedFile>? EncodedPhotos { get; set; }
     }
 }

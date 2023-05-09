@@ -1,5 +1,6 @@
 ﻿using CarSelling.Data;
 using CarSelling.Exceptions;
+using CarSelling.Infrastructure;
 using CarSelling.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,13 +30,32 @@ namespace CarSelling.Repositories
         public async Task<IEnumerable<CarAd>> GetAllCarAdsAsync() =>
             await _context.CarAds.ToListAsync();
 
-        public async Task<CarAd?> GetCarAdByIdAsync(int id)
+        public async Task<CarAd?> GetCarAdAsync(int id)
         {
-            var ad = await _context.CarAds.Include(c => c.CreatedBy)
+            return await _context.CarAds.FindAsync(id);
+        }
+
+        public async Task<CarAdDto?> GetCarAdByIdAsync(int id)
+        {
+            var ad = _context.CarAds
+                .Include(c => c.CreatedBy)
                 .Include(c => c.Car)
                 .Include(c => c.PhotoPaths)
-                .FirstOrDefaultAsync(c => c.Id == id);
-            return ad;
+                .Include(c => c.EncodedPhotos)
+                .Where(c => c.Id == id)
+                .Select(c => new CarAdDto
+                {
+                    Id = c.Id,
+                    Title = c.Title,
+                    Description = c.Description,
+                    Price = c.Price,
+                    Negotiable = c.Negotiable,
+                    Car = c.Car,
+                    CreatedBy = c.CreatedBy,
+                    PhotoPathIds = c.PhotoPaths!.Select(p => p.Id).ToArray(),
+                    EncodedPhotoIds = c.EncodedPhotos!.Select(p => p.Id).ToArray()
+                });
+            return await ad.FirstOrDefaultAsync();
         }
 
         public async Task UpdateCarAdAsync(CarAd carAd)
@@ -48,7 +68,7 @@ namespace CarSelling.Repositories
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (! await CarAdWithIdExistsAsync(carAd.Id))
+                if (!await CarAdWithIdExistsAsync(carAd.Id))
                 {
                     throw new NotFoundException();
                 }

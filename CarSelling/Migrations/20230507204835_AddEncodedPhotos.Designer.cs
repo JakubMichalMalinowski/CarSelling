@@ -4,6 +4,7 @@ using CarSelling.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarSelling.Migrations
 {
     [DbContext(typeof(CarSellingDbContext))]
-    partial class CarSellingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230507204835_AddEncodedPhotos")]
+    partial class AddEncodedPhotos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,7 +67,7 @@ namespace CarSelling.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cars", (string)null);
+                    b.ToTable("Cars");
                 });
 
             modelBuilder.Entity("CarSelling.Models.CarAd", b =>
@@ -101,7 +104,7 @@ namespace CarSelling.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("CarAds", (string)null);
+                    b.ToTable("CarAds");
                 });
 
             modelBuilder.Entity("CarSelling.Models.EncodedFile", b =>
@@ -127,7 +130,7 @@ namespace CarSelling.Migrations
 
                     b.HasIndex("CarAdId");
 
-                    b.ToTable("EncodedFiles", (string)null);
+                    b.ToTable("EncodedFiles");
                 });
 
             modelBuilder.Entity("CarSelling.Models.FilePath", b =>
@@ -149,7 +152,7 @@ namespace CarSelling.Migrations
 
                     b.HasIndex("CarAdId");
 
-                    b.ToTable("FilePaths", (string)null);
+                    b.ToTable("FilePaths");
                 });
 
             modelBuilder.Entity("CarSelling.Models.User", b =>
@@ -179,7 +182,7 @@ namespace CarSelling.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CarSelling.Models.CarAd", b =>
