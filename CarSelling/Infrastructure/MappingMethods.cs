@@ -49,14 +49,13 @@ namespace CarSelling.Infrastructure
             return carAd;
         }
 
-        public static CarAdSimpleResponseDto ToCarAdSimpleResponseDto(this CarAd ad)
+        public static CarAdSimpleResponseDto ToCarAdSimpleResponseDto(this CarAdDto ad)
         {
-            (int id, PhotoLocation location)? mainPhoto = ad.GetMainPhoto();
+            (int? id, PhotoLocation location)? mainPhoto = ad.GetMainPhoto();
             return new CarAdSimpleResponseDto
             {
                 Id = ad.Id,
                 Title = ad.Title,
-                Description = ad.Description,
                 Price = ad.Price,
                 Negotiable = ad.Negotiable,
                 MainPhotoId = mainPhoto?.id,
@@ -64,16 +63,16 @@ namespace CarSelling.Infrastructure
             };
         }
 
-        private static (int id, PhotoLocation location)? GetMainPhoto(this CarAd ad)
+        private static (int? id, PhotoLocation location)? GetMainPhoto(this CarAdDto ad)
         {
-            if (ad.PhotoPaths?.Count > 0)
+            if (ad.PhotoPathIds?.Length > 0)
             {
-                return (ad.PhotoPaths.First().Id, PhotoLocation.FileStorage);
+                return (ad.PhotoPathIds.FirstOrDefault(), PhotoLocation.FileStorage);
             }
 
-            if (ad.EncodedPhotos?.Count > 0)
+            if (ad.EncodedPhotoIds?.Length > 0)
             {
-                return (ad.EncodedPhotos.First().Id, PhotoLocation.EncodedFile);
+                return (ad.EncodedPhotoIds.FirstOrDefault(), PhotoLocation.EncodedFile);
             }
 
             return null;
