@@ -3,7 +3,7 @@ using CarSelling.Models;
 
 namespace CarSelling.Repositories
 {
-    public class FilePathRepository : IFilePathRepository
+    public class FilePathRepository : IPhotoRepository<FilePath>
     {
         private readonly CarSellingDbContext _context;
 
@@ -12,7 +12,7 @@ namespace CarSelling.Repositories
             _context = context;
         }
 
-        public async Task<FilePath?> GetFilePathByIdAsync(int id)
+        public async Task<FilePath?> GetPhotoByIdAsync(int id)
         {
             return await _context.FilePaths
                 .FindAsync(id);

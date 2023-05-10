@@ -1,5 +1,6 @@
 using CarSelling.Data;
 using CarSelling.Infrastructure;
+using CarSelling.Models;
 using CarSelling.Repositories;
 using CarSelling.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -48,7 +49,8 @@ builder.Services.AddScoped<IAuthorizationHandler, UserPermissionHandler>();
 builder.Services.AddScoped<ICarAdRepository, CarAdRepository>();
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IFilePathRepository, FilePathRepository>();
+builder.Services.AddScoped<IPhotoRepository<FilePath>, FilePathRepository>();
+builder.Services.AddScoped<IPhotoRepository<EncodedFile>, EncodedFileRepository>();
 
 builder.Services.AddScoped<ICarAdService, CarAdService>();
 builder.Services.AddScoped<IPhotoService, PhotoService>();

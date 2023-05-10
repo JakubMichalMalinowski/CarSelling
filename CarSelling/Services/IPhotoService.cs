@@ -7,5 +7,6 @@ namespace CarSelling.Services
     {
         public IAsyncEnumerable<string> UploadFilesAsync(List<IFormFile> files);
         public Task<MimedStream> DownloadFileAsync(int photoId);
+        public Task<MimedString> DownloadEncodedFileAsync(int photoId);
     }
 }

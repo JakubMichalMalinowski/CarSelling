@@ -30,13 +30,21 @@ namespace CarSelling.Controllers
 
         [AllowAnonymous]
         [DisableJwtValidation]
-        [HttpGet("{id}")]
+        [HttpGet("file/{id}")]
         public async Task<IActionResult> Download(int id)
         {
             var stream = await _service.DownloadFileAsync(id);            
 
             return File(stream.PhotoStream, stream.MimeType
                 ?? "application/octet-stream");
+        }
+
+        [AllowAnonymous]
+        [DisableJwtValidation]
+        [HttpGet("encoded/{id}")]
+        public async Task<MimedString> DownloadEncoded(int id)
+        {
+            return await _service.DownloadEncodedFileAsync(id);
         }
     }
 }

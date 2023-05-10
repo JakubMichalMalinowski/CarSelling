@@ -8,12 +8,15 @@ namespace CarSelling.Services
     public class PhotoService : IPhotoService
     {
         private readonly IConfiguration _configuration;
-        private readonly IFilePathRepository _repository;
+        private readonly IPhotoRepository<FilePath> _filePathRepository;
+        private readonly IPhotoRepository<EncodedFile> _encodedFileRepository;
 
-        public PhotoService(IConfiguration configuration, IFilePathRepository repository)
+        public PhotoService(IConfiguration configuration, IPhotoRepository<FilePath> filePathRepository,
+            IPhotoRepository<EncodedFile> encodedFileRepository)
         {
             _configuration = configuration;
-            _repository = repository;
+            _filePathRepository = filePathRepository;
+            _encodedFileRepository = encodedFileRepository;
         }
 
         public async IAsyncEnumerable<string> UploadFilesAsync(List<IFormFile> files)
@@ -43,7 +46,7 @@ namespace CarSelling.Services
 
         public async Task<MimedStream> DownloadFileAsync(int photoId)
         {
-            var filePath = await _repository.GetFilePathByIdAsync(photoId);
+            var filePath = await _filePathRepository.GetPhotoByIdAsync(photoId);
 
             var stream = File.OpenRead(filePath?.Path
                 ?? throw new NotFoundException());
@@ -51,6 +54,11 @@ namespace CarSelling.Services
             new FileExtensionContentTypeProvider().TryGetContentType(filePath.Path, out var type);
 
             return new MimedStream(stream, type);
+        }
+
+        public async Task<MimedString> DownloadEncodedFileAsync(int photoId)
+        {
+            return await _encodedFileRepository.GetPhotoByIdAsync(photoId) ?? throw new NotFoundException();
         }
     }
 }
