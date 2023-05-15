@@ -42,7 +42,11 @@ namespace CarSelling.Repositories
 
         public async Task<CarAd?> GetCarAdAsync(int id)
         {
-            return await _context.CarAds.FindAsync(id);
+            return await _context.CarAds
+                .Include(c => c.Car)
+                .Include(c => c.PhotoPaths)
+                .Include(c => c.EncodedPhotos)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<CarAdDto?> GetCarAdByIdAsync(int id)
