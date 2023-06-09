@@ -19,7 +19,8 @@ namespace CarSelling.Services
             _encodedFileRepository = encodedFileRepository;
         }
 
-        public async IAsyncEnumerable<string> UploadFilesAsync(List<IFormFile> files)
+        public async IAsyncEnumerable<string> UploadFilesAsync(
+            List<IFormFile> files)
         {
             foreach (var file in files)
             {
@@ -30,8 +31,10 @@ namespace CarSelling.Services
                     do
                     {
                         filePath = Path.Combine(
-                            _configuration["Storage:Path"] ?? throw new NullFieldException(),
-                            Path.ChangeExtension(Path.GetRandomFileName(), fileExt));
+                            _configuration["Storage:Path"]
+                            ?? throw new NullFieldException(),
+                            Path.ChangeExtension(Path.GetRandomFileName(),
+                            fileExt));
                     }
                     while (File.Exists(filePath));
                     using (var stream = File.Create(filePath))
