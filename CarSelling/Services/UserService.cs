@@ -61,7 +61,8 @@ namespace CarSelling.Services
 
         public async Task<string> LoginUserAsync(UserLoginDto userDto)
         {
-            var user = await _repository.GetUserWithUserNameAsync(userDto.UserName) ?? throw new BadCredentialsException();
+            var user = await _repository.GetUserWithUserNameAsync(
+                userDto.UserName) ?? throw new BadCredentialsException();
             var passwordHasher = new PasswordHasher<User>();
             if (passwordHasher.VerifyHashedPassword(
                 user, user.HashedPassword, userDto.Password)
@@ -72,17 +73,21 @@ namespace CarSelling.Services
 
             var issuer = _configuration["JwtSettings:iss"];
             var audience = _configuration["JwtSettings:aud"];
-            var key = Encoding.ASCII.GetBytes(_configuration["JwtSettings:key"]!);
+            var key = Encoding.ASCII.GetBytes(
+                _configuration["JwtSettings:key"]!);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim("userId", user.Id.ToString()),
-                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new Claim(JwtRegisteredClaimNames.Sub,
+                    user.UserName),
+                    new Claim(JwtRegisteredClaimNames.Jti,
+                    Guid.NewGuid().ToString())
                 }),
-                Expires = DateTime.UtcNow.AddSeconds(double.Parse(_configuration["JwtSettings:exp"]!)),
+                Expires = DateTime.UtcNow.AddSeconds(double.Parse(
+                    _configuration["JwtSettings:exp"]!)),
                 Issuer = issuer,
                 Audience = audience,
                 SigningCredentials = new SigningCredentials(
