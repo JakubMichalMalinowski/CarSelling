@@ -5,7 +5,8 @@ namespace CarSelling.Data
 {
     public class CarSellingDbContext : DbContext
     {
-        public CarSellingDbContext(DbContextOptions<CarSellingDbContext> options) : base(options) { }
+        public CarSellingDbContext(DbContextOptions<CarSellingDbContext> options)
+            : base(options) { }
 
         public DbSet<CarAd> CarAds { get; set; } = default!;
         public DbSet<User> Users { get; set; } = default!;
