@@ -24,9 +24,11 @@ namespace CarSelling.Services
             _authorizationService = authorizationService;
         }
 
-        public async Task<CarAdResponseDto> CreateCarAdAsync(CarAdRequestDto carAdRequestDto)
+        public async Task<CarAdResponseDto> CreateCarAdAsync(
+            CarAdRequestDto carAdRequestDto)
         {
-            var carAd = carAdRequestDto.ToCarAdWithUser(await _userPrincipal.GetUserAsync());
+            var carAd = carAdRequestDto.ToCarAdWithUser(
+                await _userPrincipal.GetUserAsync());
             await _carAdRepository.CreateCarAdAsync(carAd);
             return (await _carAdRepository.GetCarAdByIdAsync(carAd.Id))
                 .ToCarAdResponseDto() ?? throw new NotFoundException();
@@ -34,9 +36,11 @@ namespace CarSelling.Services
 
         public async Task DeleteCarAdAsync(int id)
         {
-            var ad = await _carAdRepository.GetCarAdAsync(id) ?? throw new NotFoundException();
+            var ad = await _carAdRepository.GetCarAdAsync(id)
+                ?? throw new NotFoundException();
             var authResult = await _authorizationService.AuthorizeAsync(
-                _userPrincipal.UserClaimsPrincipal, ad, new ResourceOwnerRequirement());
+                _userPrincipal.UserClaimsPrincipal, ad,
+                new ResourceOwnerRequirement());
 
             if (!authResult.Succeeded)
             {
