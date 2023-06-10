@@ -102,7 +102,8 @@ namespace CarSelling.Repositories
             }
         }
 
-        public async Task<IList<int>> GetAllCarAdsIdsCreatedByUserWithIdAsync(int userId)
+        public async Task<IList<int>> GetAllCarAdsIdsCreatedByUserWithIdAsync(
+            int userId)
         {
             return await _context.CarAds
                 .Where(ad => ad.CreatedBy.Id == userId)

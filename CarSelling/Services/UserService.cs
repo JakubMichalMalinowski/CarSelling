@@ -37,7 +37,8 @@ namespace CarSelling.Services
 
         public async Task DeleteUserAsync(int id)
         {
-            var user = await _userRepository.GetUserByIdAsync(id) ?? throw new NotFoundException();
+            var user = await _userRepository.GetUserByIdAsync(id)
+                ?? throw new NotFoundException();
             var authResult = await _authorizationService.AuthorizeAsync(
                 _userPrincipal.UserClaimsPrincipal,
                 user,
