@@ -13,17 +13,23 @@ namespace CarSelling.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _repository;
+        private readonly IUserRepository _userRepository;
+        private readonly ICarAdRepository _carAdRepository;
+        private readonly ICarAdService _carAdService;
         private readonly IConfiguration _configuration;
         private readonly IAuthorizationService _authorizationService;
         private readonly UserPrincipal _userPrincipal;
 
-        public UserService(IUserRepository repository,
+        public UserService(IUserRepository userRepository,
+            ICarAdRepository carAdRepository,
+            ICarAdService carAdService,
             IConfiguration configuration,
             IAuthorizationService authorizationService,
             UserPrincipal userPrincipal)
         {
-            _repository = repository;
+            _userRepository = userRepository;
+            _carAdRepository = carAdRepository;
+            _carAdService = carAdService;
             _configuration = configuration;
             _authorizationService = authorizationService;
             _userPrincipal = userPrincipal;
@@ -31,7 +37,7 @@ namespace CarSelling.Services
 
         public async Task DeleteUserAsync(int id)
         {
-            var user = await _repository.GetUserByIdAsync(id) ?? throw new NotFoundException();
+            var user = await _userRepository.GetUserByIdAsync(id) ?? throw new NotFoundException();
             var authResult = await _authorizationService.AuthorizeAsync(
                 _userPrincipal.UserClaimsPrincipal,
                 user,
@@ -42,12 +48,19 @@ namespace CarSelling.Services
                 throw new ForbidException();
             }
 
-            await _repository.DeleteUserAsync(user);
+            var carAdIds = await _carAdRepository
+                .GetAllCarAdsIdsCreatedByUserWithIdAsync(id);
+            foreach (var carAdId in carAdIds)
+            {
+                await _carAdService.DeleteCarAdAsync(carAdId);
+            }
+
+            await _userRepository.DeleteUserAsync(user);
         }
 
         public async Task<UserResponseDto?> GetUserByIdAsync(int id)
         {
-            var user = await _repository.GetUserByIdAsync(id);
+            var user = await _userRepository.GetUserByIdAsync(id);
             var authResult = await _authorizationService.AuthorizeAsync(
                 _userPrincipal.UserClaimsPrincipal,
                 user, new ResourceOwnerRequirement());
@@ -61,7 +74,7 @@ namespace CarSelling.Services
 
         public async Task<string> LoginUserAsync(UserLoginDto userDto)
         {
-            var user = await _repository.GetUserWithUserNameAsync(
+            var user = await _userRepository.GetUserWithUserNameAsync(
                 userDto.UserName) ?? throw new BadCredentialsException();
             var passwordHasher = new PasswordHasher<User>();
             if (passwordHasher.VerifyHashedPassword(
@@ -104,7 +117,7 @@ namespace CarSelling.Services
 
         public async Task<UserResponseDto> RegisterUserAsync(UserRequestDto userRequestDto)
         {
-            if (await _repository.UserWithUserNameExistsAsync(userRequestDto.UserName))
+            if (await _userRepository.UserWithUserNameExistsAsync(userRequestDto.UserName))
             {
                 throw new UserAlreadyExistsException();
             }
@@ -116,14 +129,14 @@ namespace CarSelling.Services
             user.HashedPassword = passwordHasher
                 .HashPassword(user, userRequestDto.Password);
 
-            await _repository.CreateUserAsync(user);
+            await _userRepository.CreateUserAsync(user);
 
             return userRequestDto.ToUserResponseDto(user.Id);
         }
 
         public async Task UpdateUserAsync(int id, UserRequestDto userDto)
         {
-            var userFromDB = await _repository.GetUserByIdAsync(id);
+            var userFromDB = await _userRepository.GetUserByIdAsync(id);
             var authResult = await _authorizationService.AuthorizeAsync(
                 _userPrincipal.UserClaimsPrincipal,
                 userFromDB,
@@ -135,7 +148,7 @@ namespace CarSelling.Services
 
             if (userFromDB?.UserName != userDto.UserName)
             {
-                var userNameExists = await _repository
+                var userNameExists = await _userRepository
                     .UserWithUserNameExistsAsync(userDto.UserName);
 
                 if (userNameExists)
@@ -144,7 +157,7 @@ namespace CarSelling.Services
                 }
             }
 
-            _repository.DetachUser(userFromDB);
+            _userRepository.DetachUser(userFromDB);
 
             var passwordHasher = new PasswordHasher<User>();
             var user = userDto.ToUserWithoutPassword(id);
@@ -153,7 +166,7 @@ namespace CarSelling.Services
                 userDto.Password);
             user.HashedPassword = hashedPassword;
 
-            await _repository.UpdateUserAsync(user);
+            await _userRepository.UpdateUserAsync(user);
         }
     }
 }

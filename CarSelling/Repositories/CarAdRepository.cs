@@ -101,5 +101,13 @@ namespace CarSelling.Repositories
                 _context.Entry(carAd).State = EntityState.Detached;
             }
         }
+
+        public async Task<IList<int>> GetAllCarAdsIdsCreatedByUserWithIdAsync(int userId)
+        {
+            return await _context.CarAds
+                .Where(ad => ad.CreatedBy.Id == userId)
+                .Select(ad => ad.Id)
+                .ToListAsync();
+        }
     }
 }
