@@ -6,7 +6,5 @@ namespace CarSelling.Models
     {
         [JsonIgnore]
         public int Id { get; set; }
-
-        public EncodedFile(string type, string content) : base(type, content) { }
     }
 }
