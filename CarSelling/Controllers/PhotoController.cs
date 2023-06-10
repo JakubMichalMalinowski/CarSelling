@@ -3,6 +3,7 @@ using CarSelling.Models;
 using CarSelling.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections;
 
 namespace CarSelling.Controllers
 {
@@ -26,6 +27,17 @@ namespace CarSelling.Controllers
             {
                 yield return new { Path = path };
             }
+        }
+
+        [HttpPost("xml")]
+        public async Task<IList<string>> UploadXml(List<IFormFile> files)
+        {
+            var paths = new List<string>();
+            await foreach (var path in _service.UploadFilesAsync(files))
+            {
+                paths.Add(path);
+            }
+            return paths;
         }
 
         [AllowAnonymous]
