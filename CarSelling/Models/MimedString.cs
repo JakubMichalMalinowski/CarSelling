@@ -2,6 +2,7 @@
 
 namespace CarSelling.Models
 {
+    [XmlInclude(typeof(EncodedFile))]
     public class MimedString
     {
         public string Type { get; set; } = string.Empty;
