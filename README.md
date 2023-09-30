@@ -11,6 +11,7 @@ Within the application:
 * ASP.NET Core
 * C#
 * Entity Framework Core
+* Microsoft SQL Server
 
 ## Endpoints
 ![image](https://github.com/JakubMichalMalinowski/CarSelling/assets/49117480/1c621038-6fc3-4626-b07c-6c6f73cc8bb6)
