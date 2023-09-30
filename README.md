@@ -1,12 +1,12 @@
 # CarSelling
-Serwis ogłoszeniowy jako WebAPI w stylu REST
+Advertising service created as WebAPI in REST style
 
-W ramach implementacji:
-* Wykorzystano token JWT w uwierzytelnianiu i autoryzacji użytkowników.
-* Architektura aplikacji zbudowana została z użyciem kontrolerów, serwisów i repozytoriów.
-* Użyto obiektów DTO i obiektów domenowych modelu.
+Within the application:
+* JWT Token was used to user authentication and authorization.
+* App is composed of controllers, services and repositories.
+* DTO and domain objects was used in transfer data.
 
-## Technologie
+## Technologies
 * .NET (.NET Core)
 * ASP.NET Core
 * C#
